@@ -2,7 +2,13 @@ Package: NeuroblastomaPSM
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Who wrote it
+Authors@R: person("Wael", "Mohammed",
+            email = "wmamohammed1@sheffield.ac.uk",
+            role = c("aut", "cre"),
+            comment = c(ORCID = "0000-0003-0370-4903",
+              GitHub = "https://github.com/W-Mohammed/",
+              LinkedIn = "https://www.linkedin.com/in/wael-mohammed/",
+              X = "https://twitter.com/Wael_Mohammed_"))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
