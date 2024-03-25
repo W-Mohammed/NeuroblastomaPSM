@@ -3,7 +3,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of NeuroblastomaPSM is to document the cost effectiveness of **Dinutuximab Beta** (Qarziba®) for the Treatment of High-Risk Neuroblastoma Patients After Stem Cell Transplantation.
+The **NeuroblastomaPSM** (*Neuroblastoma Partitioned Survival Model*) package documents the cost-effectiveness of Dinutuximab Beta (Qarziba®) for the treatment of high-risk neuroblastoma patients after stem cell transplantation.
 
 
 ## Installation
