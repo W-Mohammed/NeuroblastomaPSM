@@ -1,6 +1,6 @@
 Package: NeuroblastomaPSM
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Neuroblastoma Partitioned Survival Model
 Version: 0.1.0
 Authors@R: person("Wael", "Mohammed",
             email = "wmamohammed1@sheffield.ac.uk",
@@ -9,9 +9,11 @@ Authors@R: person("Wael", "Mohammed",
               GitHub = "https://github.com/W-Mohammed/",
               LinkedIn = "https://www.linkedin.com/in/wael-mohammed/",
               X = "https://twitter.com/Wael_Mohammed_"))
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Maintainer: The package maintainer <wmamohammed1@sheffield.ac.uk>
+Description: The NeuroblastomaPSM (Neuroblastoma Partitioned Survival Model) 
+    package documents the cost effectiveness of Dinutuximab Beta (Qarziba®) for
+    the treatment of high-risk neuroblastoma patients after stem cell 
+    transplantation.
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
