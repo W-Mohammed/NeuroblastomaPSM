@@ -19,3 +19,10 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/W-Mohammed/NeuroblastomaPSM
 BugReports: https://github.com/W-Mohammed/NeuroblastomaPSM/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.3.1

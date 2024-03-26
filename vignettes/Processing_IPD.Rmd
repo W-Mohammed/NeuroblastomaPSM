@@ -1,0 +1,81 @@
+---
+title: "Processing IPD"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Processing IPD}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction:
+
+In survival analysis, individual patient data (IPD) is often considered the gold standard. However, when IPD is not available, researchers sometimes have to rely on aggregate data presented in published articles, which often include Kaplan-Meier survival curves. Digitization of these graphs is a method used to extract approximate IPD from published survival plots, enabling more detailed and flexible analyses than would be possible with aggregate data alone.
+
+The process of digitizing graphs to obtain IPD involves several steps:
+
+1. **Graph Identification and Selection**: The first step involves identifying and selecting the Kaplan-Meier survival curves or other relevant survival graphs from the published literature that you wish to digitize.
+
+2. **Preparation for Digitization**: This usually involves scanning, downloading, or taking a high-resolution screenshot of the graph if it's in digital format. The image should be clear and large enough to accurately identify and mark the data points.
+
+3. **Using Digitization Software**: There are various software tools available for digitizing graphs (e.g., WebPlotDigitizer, DigitizeIt, PlotDigitizer). These tools allow the user to upload the graph image, calibrate the axes by marking known points (e.g., time and survival probability axes), and then manually or automatically extract the data points from the graph. The software translates the positions of these points into coordinates based on the calibration.
+
+4. **Data Extraction**: By clicking on or hovering over the curve at various points, the digitization software captures the coordinates, which correspond to the time (on the X-axis) and the survival probability (on the Y-axis) or other relevant metrics. This step is critical and requires careful attention to ensure accuracy, especially at key points such as censored data marks or where there are significant changes in the slope of the curve.
+
+5. **Exporting and Cleaning the Data**: The extracted data points can then be exported to data analysis software or spreadsheets for further cleaning and analysis. This may involve interpolating between points, dealing with censored observations, and converting the survival probabilities into an approximate IPD.
+
+6. **Statistical Analysis**: With the digitized data, researchers can perform various survival analyses, such as estimating survival rates at specific times, comparing survival curves, or even conducting individual-level meta-analyses if data from multiple studies are digitized.
+
+7. **Validation and Sensitivity Analysis**: It's crucial to validate the digitized data against published results (if available) to ensure accuracy. Additionally, sensitivity analyses may be conducted to assess how variations in the digitization process (e.g., differences in point selection) might affect the results.
+
+This process allows researchers to overcome the limitations of not having access to IPD and enables more comprehensive analyses than would be possible with only aggregate survival data. However, it's important to acknowledge that digitized data may not capture all the nuances of the original IPD and that this method involves approximation. Therefore, results derived from digitized data should be interpreted with caution and, where possible, validated against other sources.
+
+This vignette documents the process succeeding the digitization process. The aim of this process is to combine the data from different curves into a single dataset.
+
+# Combining datasets:
+
+The following code chunk documents how the IPD from each of the survival curves were combined into a single dataset. The combined dataset was then saved in the package for further analysis. The chunk code below is meant to reflect one part of the package development; therefore, users/readers of this vignette are advised not to execute the following chunk code.
+
+```{r, include = TRUE, echo = TRUE, eval = FALSE}
+IPD_curves_data_path <- list.files(path = "data/")
+treatments_codes <- c("Iso", "Deni")
+curves_codes <- c("OS", "EFS")
+
+IPD_data <- lapply(
+  X = treatments_codes,
+  FUN = function(treatment_cd) {
+    treatments_file_names <- IPD_curves_data_path[grepl(
+      pattern = treatment_cd,
+      x = IPD_curves_data_path
+    )]
+    lapply(
+      X = curves_codes,
+      FUN = function(curve_cd) {
+        target_file <- treatments_file_names[grepl(
+          pattern = curve_cd,
+          x = treatments_file_names
+        )]
+        # Read identified file:
+        ipd_data <- read.csv(file = paste0("data/", target_file)) |>
+          cbind(
+            "treatment_cd" = ifelse(treatment_cd == "Iso", "TT", "GD2"),
+            "curve" = curve_cd
+          )
+      }) |>
+      do.call(
+        what = rbind,
+        args = _
+      )
+  }) |>
+  do.call(
+    what = rbind,
+    args = _
+  )
+IPD_data[["treatment"]] <- ifelse(
+  test = IPD_data$treatment_cd == "TT",
+  yes = "Isotretinoin",
+  no = "Dinutuximab β"
+)
+IPD_data <- IPD_data[, c(1, 4, 5, 2, 3)]
+usethis::use_data(IPD_data)
+```
+
