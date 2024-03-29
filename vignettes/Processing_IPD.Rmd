@@ -7,6 +7,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
 # Introduction:
 
 In survival analysis, individual patient data (IPD) is often considered the gold standard. However, when IPD is not available, researchers sometimes have to rely on aggregate data presented in published articles, which often include Kaplan-Meier survival curves. Digitization of these graphs is a method used to extract approximate IPD from published survival plots, enabling more detailed and flexible analyses than would be possible with aggregate data alone.
@@ -57,7 +64,7 @@ IPD_data <- lapply(
         # Read identified file:
         ipd_data <- read.csv(file = paste0("data/", target_file)) |>
           cbind(
-            "treatment_cd" = ifelse(treatment_cd == "Iso", "TT", "GD2"),
+            "trt_cd" = ifelse(treatment_cd == "Iso", "TT", "GD2"),
             "curve" = curve_cd
           )
       }) |>
@@ -71,11 +78,18 @@ IPD_data <- lapply(
     args = _
   )
 IPD_data[["treatment"]] <- ifelse(
-  test = IPD_data$treatment_cd == "TT",
+  test = IPD_data$trt_cd == "TT",
   yes = "Isotretinoin",
   no = "Dinutuximab β"
 )
-IPD_data <- IPD_data[, c(1, 4, 5, 2, 3)]
+IPD_data <- IPD_data[, c(1, 4, 5, 2, 3)] |>
+  `colnames<-`(
+    x = _,
+    value = c("trt", "trt_cd", "curve", "eventtime", "event")
+  )
+
+rbind(head(IPD_data), tail(IPD_data))
+
 usethis::use_data(IPD_data)
 ```
 

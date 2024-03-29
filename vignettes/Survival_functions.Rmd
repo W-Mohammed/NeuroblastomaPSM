@@ -1,0 +1,231 @@
+---
+title: "Survival functions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Survival functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  echo = TRUE,
+  results = 'markup',
+  message = FALSE, 
+  warning = FALSE,
+  comment = "#>",
+  fig.width = 8, 
+  fig.height = 6
+)
+```
+
+## Introduction:
+
+**Survival Analysis** is a statistical approach that enables the examination of event occurrence rates over time without assuming these rates remain constant. Principally, it facilitates modeling the duration until an event's occurrence, comparison of such durations across diverse groups, or the investigation of the relationship between time-to-event and quantitative variables. This method is particularly adept at handling censored data, a scenario where the event of interest (such as death, failure, or recovery) hasn't occurred for some subjects during the study period.
+
+**Hazard Function** represents the instant rate of event occurrence at a given time point, _t_. Unlike the assumption of constant hazard rates in some analyses, survival analysis recognizes the variability of these rates over time. The cumulative hazard then aggregates the hazard experienced until time _t_.
+
+**Survival Function** is defined as the likelihood of an individual's survival—or alternatively, the non-occurrence of the event of interest—up to a certain point in time, _t_. Mathematically, it's depicted as $S(t) = Pr(T>t)$, with $S$ representing a probability value between 0 and 1, given that survival times are non-negative ($T \geq 0$).
+
+$$ S(t) = Pr(T>t) $$
+
+**Kaplan-Meier Curve** visualizes the survival function as a step function, marking the cumulative probability of survival over time. It remains horizontal during intervals without events, dropping at points where events occur, reflecting changes in the survival function.
+
+**Censoring in Survival Analysis** is a unique aspect concerning missing data wherein the event of interest is not observed for certain subjects by the study's end, either due to their withdrawal or other non-event-related reasons. The predominant form encountered is right censoring, with left censoring occurring when the start time is unknown.
+
+**hazard ratio (HR)** is the key metric derived from a Cox regression analysis. This ratio quantifies the comparative hazards between two distinct groups at any given moment. It reflects the instant rate at which the event of interest occurs among those still susceptible to it. Importantly, it should **not** be construed as a measure of risk, although it is frequently misunderstood in this way. For a regression coefficient $\beta$, the hazard ratio is computed as HR = $\exp(\beta)$.
+
+An HR less than 1 suggests a lower hazard of the event under study, typically death, for the group in question compared to the reference group. Conversely, an HR greater than 1 indicates a higher hazard of the event for the group in question. Thus, an HR of 0.59 would mean that the hazard for females is 0.59 times that for males at any specific time point, signifying that females have a markedly lower hazard of death compared to males according to the dataset.
+
+**Proportional Hazards Assumption** is fundamental to comparing survival functions across groups, such as different patient cohorts, this assumption does not necessitate constant hazards but maintains a constant hazard ratio over time, enabling comparisons of hazard rates across different observation periods.
+
+## Survival objects:
+
+```{r survivalObjects}
+# Split IPD by curves and treatments: 
+IPD_curves_trts <- split(
+  x = IPD_data,
+  f = interaction(IPD_data$trt, IPD_data$curve) 
+)
+
+tmp = lapply(
+  X = names(IPD_curves_trts) |>
+    `names<-`(IPD_curves_trts),
+  FUN = function(surv_data_nm) {
+    print(gsub("\\.", " ", surv_data_nm))
+    
+    surv_data <- IPD_curves_trts[[surv_data_nm]]
+    print(rbind(head(surv_data, n = 5), tail(surv_data, n = 5)))
+  })
+
+# Split IPD by curves: 
+IPD_curves <- split(
+  x = IPD_data,
+  f = IPD_data$curve 
+)
+
+# Split IPD by treatment: 
+IPD_trt <- split(
+  x = IPD_data,
+  f = IPD_data$trt 
+)
+```
+
+Utilizing the {survival} package, the `Surv()` function generates a survival object suitable for being the response in a model's formula. Each subject is represented by their survival time in this object, with censored subjects marked by a `+`. Here's a glimpse at the reconstructed individual patient data (IPD):
+
+## Non-Parametric Methods: Kaplan-Meier Curves
+
+The Kaplan-Meier method is a cornerstone of survival analysis, offering a straightforward way to estimate survival probabilities without assuming a specific statistical distribution for the event times. This method employs a non-parametric technique to produce a step function that decreases each time an event is observed.
+
+To construct survival curves employing the Kaplan-Meier method, one can use the `survfit()` function. By applying this function, a survival curve for each treatment is created.
+
+### Kaplan-Meier estimeates:
+
+```{r km_estimates}
+# KM curves:
+survival_curves_estimates <- lapply(
+  X = names(IPD_curves_trts) |>
+    `names<-`(IPD_curves_trts),
+  FUN = function(trt_curve_nm) {
+    surv_data <- IPD_curves_trts[[trt_curve_nm]]
+    surv_obj <- survival::survfit(
+      formula = survival::Surv(time = eventtime, event = event) ~ 1,
+      data = IPD_curves_trts[[trt_curve_nm]],
+      type = "kaplan-meier",
+      conf.type = "log-log"
+    )
+    cat("\n")
+    print(trt_curve_nm)
+    print(
+      x = surv_obj, 
+      print.rmean = TRUE
+    )
+  }
+)
+```
+
+### Kaplan-Meier plots:
+
+```{r km_curves}
+# KM curves:
+survival_curves_km <- lapply(
+  X = names(IPD_curves_trts) |>
+    `names<-`(IPD_curves_trts),
+  FUN = function(trt_curve_nm) {
+    surv_data <- IPD_curves_trts[[trt_curve_nm]]
+    surv_obj <- survival::survfit(
+      formula = survival::Surv(time = eventtime, event = event) ~ 1,
+      data = IPD_curves_trts[[trt_curve_nm]]
+    )
+    plot(
+      surv_obj,
+      main = paste0(
+        "Kaplan-Meier Curve for ",
+        gsub(
+          pattern = "\\.",
+          replacement = " ",
+          x = trt_curve_nm
+        )
+      ),
+      xlab = "Time (years)",
+      ylab = "Survival probability"
+    )
+  }
+)
+
+# KM curves, by treatment:
+survival_curves_trt_km <- lapply(
+  X = names(IPD_curves) |>
+    `names<-`(IPD_curves),
+  FUN = function(curve_nm) {
+    surv_obj <- survival::survfit(
+      formula = survival::Surv(time = eventtime, event = event) ~ trt,
+      data = IPD_curves[[curve_nm]]
+    )
+    surv_plot <- survminer::ggsurvplot(
+      fit = surv_obj,
+      data = IPD_curves[[curve_nm]],
+      risk.table = TRUE,
+      title = curve_nm,
+      legend = "none",
+      legend.title = "Treatment",
+      legend.labs = unique(IPD_curves[[curve_nm]][["trt"]]) |> 
+        sort()
+    )
+    surv_plot$plot <- surv_plot$plot + 
+      ggplot2::theme(plot.title.position = "plot")
+    print(surv_plot)
+    surv_obj
+  }
+)
+```
+
+## Fitting parametric models:
+
+Parametric models assume a specific statistical distribution for the time-to-event data. This assumption allows for the extrapolation of survival estimates beyond the range of observed data, which is particularly useful in long-term survival predictions where follow-up may not be sufficiently long.
+
+### Parametric models using maximum likelihood estimates (MLEs):
+
+```{r parametric_models_mle}
+set.seed(1234)
+# Define models to be used
+models <- c("exponential", "gamma", "gengamma", "gompertz", "weibull", "loglogistic", "lognormal") 
+
+# Write formula specifying the predictor
+formula <- survival::Surv(time = eventtime, event = event) ~ 1
+
+# Fit parametric models:
+parametric_models <- lapply(
+  X = names(IPD_curves_trts) |>
+    `names<-`(IPD_curves_trts),
+  FUN = function(curves_trts_nm) {
+    surv_data <- IPD_curves_trts[[curves_trts_nm]]
+    surv_parametric_models <- survHE::fit.models(
+      formula = formula, 
+      data = surv_data, 
+      distr = models,
+      method = "mle"
+    )
+    
+    p <- survHE::model.fit.plot(
+      surv_parametric_models,
+      scale = "relative"
+    ) 
+    print(
+      p +
+        ggplot2::theme(
+          plot.title.position = "plot",
+          text = ggplot2::element_text(size = 10),
+        )
+    )
+    
+    p <- plot(surv_parametric_models, add.km = TRUE, t = seq(0, 10))
+    print(
+      p +
+        ggplot2::labs(
+          title = paste0(
+            "MLE fitted parameteric models - ",
+            gsub(
+              pattern = "\\.",
+              replacement = " ",
+              curves_trts_nm)
+          )
+        ) +
+        ggplot2::theme(plot.title.position = "plot")
+    )
+    
+    lapply(
+      X = seq_along(models),
+      FUN = function(param_model) {
+        print(surv_parametric_models, mod = param_model)
+      }
+    )
+    
+    surv_parametric_models
+  }
+)
+```
+
+
+
