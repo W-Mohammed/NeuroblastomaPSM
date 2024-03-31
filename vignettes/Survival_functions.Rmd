@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   echo = TRUE,
@@ -49,30 +49,47 @@ IPD_curves_trts <- split(
   f = interaction(IPD_data$trt, IPD_data$curve) 
 )
 
-tmp = lapply(
+lapply(
   X = names(IPD_curves_trts) |>
-    `names<-`(IPD_curves_trts),
+    `names<-`(names(IPD_curves_trts)),
   FUN = function(surv_data_nm) {
     print(gsub("\\.", " ", surv_data_nm))
     
     surv_data <- IPD_curves_trts[[surv_data_nm]]
     print(rbind(head(surv_data, n = 5), tail(surv_data, n = 5)))
-  })
+  }
+) |>
+  invisible()
 
 # Split IPD by curves: 
 IPD_curves <- split(
   x = IPD_data,
   f = IPD_data$curve 
 )
-
-# Split IPD by treatment: 
-IPD_trt <- split(
-  x = IPD_data,
-  f = IPD_data$trt 
-)
 ```
 
 Utilizing the {survival} package, the `Surv()` function generates a survival object suitable for being the response in a model's formula. Each subject is represented by their survival time in this object, with censored subjects marked by a `+`. Here's a glimpse at the reconstructed individual patient data (IPD):
+
+```{r surv_objs}
+lapply(
+  X = names(IPD_curves_trts) |>
+    `names<-`(names(IPD_curves_trts)),
+  FUN = function(trt_curve_nm) {
+    surv_data <- IPD_curves_trts[[trt_curve_nm]]
+    surv_obj <- survival::Surv(
+      time = surv_data$eventtime,
+      event = surv_data$event
+    )
+    
+    print(gsub("\\.", " ", trt_curve_nm))
+
+    print(
+      c(head(surv_obj, n = 5), tail(surv_obj, n = 5))
+    )
+  }
+) |>
+  invisible()
+```
 
 ## Non-Parametric Methods: Kaplan-Meier Curves
 
@@ -86,7 +103,7 @@ To construct survival curves employing the Kaplan-Meier method, one can use the 
 # KM curves:
 survival_curves_estimates <- lapply(
   X = names(IPD_curves_trts) |>
-    `names<-`(IPD_curves_trts),
+    `names<-`(names(IPD_curves_trts)),
   FUN = function(trt_curve_nm) {
     surv_data <- IPD_curves_trts[[trt_curve_nm]]
     surv_obj <- survival::survfit(
@@ -111,7 +128,7 @@ survival_curves_estimates <- lapply(
 # KM curves:
 survival_curves_km <- lapply(
   X = names(IPD_curves_trts) |>
-    `names<-`(IPD_curves_trts),
+    `names<-`(names(IPD_curves_trts)),
   FUN = function(trt_curve_nm) {
     surv_data <- IPD_curves_trts[[trt_curve_nm]]
     surv_obj <- survival::survfit(
@@ -137,7 +154,7 @@ survival_curves_km <- lapply(
 # KM curves, by treatment:
 survival_curves_trt_km <- lapply(
   X = names(IPD_curves) |>
-    `names<-`(IPD_curves),
+    `names<-`(names(IPD_curves)),
   FUN = function(curve_nm) {
     surv_obj <- survival::survfit(
       formula = survival::Surv(time = eventtime, event = event) ~ trt,
@@ -167,8 +184,10 @@ Parametric models assume a specific statistical distribution for the time-to-eve
 
 ### Parametric models using maximum likelihood estimates (MLEs):
 
+#### Fitting independent survival cuves:
+
 ```{r parametric_models_mle}
-set.seed(1234)
+set.seed(1)
 # Define models to be used
 models <- c("exponential", "gamma", "gengamma", "gompertz", "weibull", "loglogistic", "lognormal") 
 
@@ -178,7 +197,7 @@ formula <- survival::Surv(time = eventtime, event = event) ~ 1
 # Fit parametric models:
 parametric_models <- lapply(
   X = names(IPD_curves_trts) |>
-    `names<-`(IPD_curves_trts),
+    `names<-`(names(IPD_curves_trts)),
   FUN = function(curves_trts_nm) {
     surv_data <- IPD_curves_trts[[curves_trts_nm]]
     surv_parametric_models <- survHE::fit.models(
@@ -227,5 +246,131 @@ parametric_models <- lapply(
 )
 ```
 
+#### Fitting survival curves by treatment:
 
+```{r parametric_models}
+set.seed(1)
+# Define models to be used
+models <- c("exponential", "gamma", "gengamma", "gompertz", "weibull", "weibullPH", "loglogistic", "lognormal") 
+
+# Write formula specifying the predictor
+formula <- survival::Surv(time = eventtime, event = event) ~ as.factor(trt)
+
+# Fit parametric models:
+parametric_models_trt <- lapply(
+  X = names(IPD_curves) |>
+    `names<-`(names(IPD_curves)),
+  FUN = function(curves_nm) {
+    surv_data <- IPD_curves[[curves_nm]]
+    surv_parametric_models <- survHE::fit.models(
+      formula = formula, 
+      data = surv_data, 
+      distr = models,
+      method = "mle"
+    )
+    
+    p <- survHE::model.fit.plot(
+      surv_parametric_models,
+      scale = "relative"
+    ) 
+    print(
+      p +
+        ggplot2::theme(
+          plot.title.position = "plot",
+          text = ggplot2::element_text(size = 10),
+        )
+    )
+    
+    p <- plot(surv_parametric_models, add.km = TRUE, t = seq(0, 10))
+    print(
+      p +
+        ggplot2::labs(
+          title = paste0(
+            "MLE fitted parameteric models - ",
+            gsub(
+              pattern = "\\.",
+              replacement = " ",
+              curves_nm)
+          )
+        ) +
+        ggplot2::theme(
+          plot.title.position = "plot",
+          # legend.text = ggplot2::element_text(size = 8),
+          # legend.title = ggplot2::element_text(size = 8)
+        )
+    )
+    
+    lapply(
+      X = seq_along(models),
+      FUN = function(param_model) {
+        print(surv_parametric_models, mod = param_model)
+      }
+    )
+    
+    surv_parametric_models
+  }
+)
+```
+
+### Best parametric model:
+
+The **Gompertz** model seems to best fits the data and offers the best predictive performance for the survival curves of both interventions.
+
+```{r gompertz_models}
+set.seed(1)
+# Define models to be used
+models <- "gompertz" 
+
+# Write formula specifying the predictor
+formula <- survival::Surv(time = eventtime, event = event) ~ 1
+
+# Fit parametric models:
+parametric_models <- lapply(
+  X = names(IPD_curves_trts) |>
+    `names<-`(names(IPD_curves_trts)),
+  FUN = function(curves_trts_nm) {
+    surv_data <- IPD_curves_trts[[curves_trts_nm]]
+    surv_parametric_models <- survHE::fit.models(
+      formula = formula, 
+      data = surv_data, 
+      distr = models,
+      method = "mle"
+    )
+    
+    p <- plot(
+      surv_parametric_models, 
+      add.km = TRUE, 
+      t = seq(0, 10), 
+      legend.position = "none"
+    )
+    print(
+      p +
+        ggplot2::coord_cartesian(xlim = c(0, 10)) +
+        ggplot2::labs(
+          title = paste0(
+            "Gompertz fitted models - ",
+            gsub(
+              pattern = "\\.",
+              replacement = " ",
+              curves_trts_nm)
+          )
+        ) +
+        ggplot2::theme(plot.title.position = "plot")
+    )
+    
+    lapply(
+      X = seq_along(models),
+      FUN = function(param_model) {
+        print(surv_parametric_models, mod = param_model)
+      }
+    )
+    
+    surv_parametric_models$models$Gompertz
+  }
+)
+```
+
+## Probabilistic Sensitivity Analysis (PSA):
+
+TODO
 

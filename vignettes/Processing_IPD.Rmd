@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -89,7 +89,5 @@ IPD_data <- IPD_data[, c(1, 4, 5, 2, 3)] |>
   )
 
 rbind(head(IPD_data), tail(IPD_data))
-
-usethis::use_data(IPD_data)
 ```
 
