@@ -20,6 +20,8 @@ devtools::install_github("W-Mohammed/NeuroblastomaPSM")
 You can build the package vignettes by cloning the repository, restoring the `renv` library and building documents with:
 
 ``` r
+# install.packages("renv")
+renv::restore()
 # install.packages("devtools")
 devtools::document()
 ```
