@@ -70,7 +70,7 @@ The analysis documented by the **Survival functions** vignette suggests that **G
 
 ```{r cumulative_survival}
 # Load the fitted `Gompertz` model parameters
-models_fit <- parametric_models
+models_fit <- NeuroblastomaPSM::parametric_models
 
 # Get the months from 0 to time horizon
 time_points <- seq(
@@ -98,7 +98,7 @@ df_survival_curves_long <- lapply(
       x = curve_nm
     )
 
-    predict_survival_curve(
+    NeuroblastomaPSM::predict_survival_curve(
       surv_mod = model_fit,
       treatment_name = treatment_nm,
       end_point = end_point,

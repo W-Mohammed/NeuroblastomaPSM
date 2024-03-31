@@ -31,4 +31,5 @@ Imports:
     ggplot2,
     hesim,
     survHE,
-    survival
+    survival,
+    survminer

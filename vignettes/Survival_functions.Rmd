@@ -43,6 +43,7 @@ An HR less than 1 suggests a lower hazard of the event under study, typically de
 ## Survival objects:
 
 ```{r survivalObjects}
+IPD_data <- NeuroblastomaPSM::IPD_data
 # Split IPD by curves and treatments: 
 IPD_curves_trts <- split(
   x = IPD_data,
