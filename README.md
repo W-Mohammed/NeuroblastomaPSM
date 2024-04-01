@@ -1,4 +1,4 @@
-# NeuroblastomaPSM
+# Introduction to NeuroblastomaPSM
 
 <!-- badges: start -->
 <!-- badges: end -->
