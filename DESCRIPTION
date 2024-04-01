@@ -17,7 +17,7 @@ Description: The NeuroblastomaPSM (Neuroblastoma Partitioned Survival Model)
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/W-Mohammed/NeuroblastomaPSM
+URL: https://github.com/W-Mohammed/NeuroblastomaPSM, https://w-mohammed.github.io/NeuroblastomaPSM/
 BugReports: https://github.com/W-Mohammed/NeuroblastomaPSM/issues
 Suggests: 
     knitr,
