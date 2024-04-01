@@ -1,0 +1,12 @@
+pandoc: 3.1.11
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  PSM: PSM.html
+  Processing_IPD: Processing_IPD.html
+  Survival_functions: Survival_functions.html
+last_built: 2024-04-01T00:38Z
+urls:
+  reference: https://w-mohammed.github.io/NeuroblastomaPSM/reference
+  article: https://w-mohammed.github.io/NeuroblastomaPSM/articles
+
