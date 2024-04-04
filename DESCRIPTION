@@ -9,15 +9,9 @@ Authors@R: person(
   role = c("aut", "cre"),
   comment = c(
     ORCID = "0000-0003-0370-4903",
-    GitHub = htmltools::HTML(
-    '<a href="https://github.com/W-Mohammed/" target="_blank" aria-label="GitHub" class="external-link"><span class="fa-brands fa-github" aria-hidden="true"></span></a>'
-      ),
-    LinkedIn = htmltools::HTML(
-    '<a href="https://www.linkedin.com/in/wael-mohammed/" target="_blank" aria-label="LinkedIn" class="external-link"><span class="fa-brands fa-linkedin-in" aria-hidden="true"></span></a>'
-      ),
-    X = htmltools::HTML(
-    '<a href="https://x.com/Wael_Mohammed_" target="_blank" aria-label="X" class="external-link"><span class="fa-brands fa-x-twitter" aria-hidden="true"></span></a>'
-      )
+    GitHub = '<a href="https://github.com/W-Mohammed/" target="_blank" aria-label="GitHub" class="external-link"><span class="fa-brands fa-github" aria-hidden="true"></span></a>',
+    LinkedIn = '<a href="https://www.linkedin.com/in/wael-mohammed/" target="_blank" aria-label="LinkedIn" class="external-link"><span class="fa-brands fa-linkedin-in" aria-hidden="true"></span></a>',
+    X = '<a href="https://x.com/Wael_Mohammed_" target="_blank" aria-label="X" class="external-link"><span class="fa-brands fa-x-twitter" aria-hidden="true"></span></a>'
     )
   )
 Maintainer: The package maintainer <wmamohammed1@sheffield.ac.uk>

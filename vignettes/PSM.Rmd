@@ -38,8 +38,8 @@ Quality-adjusted life years (QALYs) and total costs for each health state, under
 
 $$
 \begin{aligned}
-\rm{QALYs}{hik} &= \int_{0}^{T} q_{hik}(t) e^{-rt} p_{hik}(t)dt \\
-\rm{Costs}{m,hik} &= \int_{0}^{T} c_{m,hik}(t) e^{-rt} p_{hik}(t)dt
+\rm{QALYs}_{hik} &= \int_{0}^{T} q_{hik}(t) e^{-rt} p_{hik}(t)dt \\
+\rm{Costs}_{m,hik} &= \int_{0}^{T} c_{m,hik}(t) e^{-rt} p_{hik}(t)dt
 \end{aligned}
 $$
 
