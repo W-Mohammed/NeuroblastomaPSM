@@ -119,7 +119,7 @@ rbind(
 )
 ```
 
-### State membership (markov trace):
+### State membership (Markov trace):
 
 This model is represented by three health states, *event free survival (EFS)*,  *post progression survival (PPS)* and *death*. Using the predicted *EFS* and *OS*, state membership is estimated below.
 
