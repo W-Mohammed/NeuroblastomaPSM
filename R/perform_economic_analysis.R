@@ -113,6 +113,8 @@ perform_economic_analysis <- function(df_markov_trace, params) {
 
   return(
     list(
+      v_costs_results = colSums(v_costs_results),
+      v_sqalys_results = colSums(v_qalys_results),
       v_Dcosts_results = v_Dcosts_results,
       v_Dqalys_results = v_Dqalys_results
     )
@@ -181,8 +183,8 @@ calculate_treatment_costs <- function(params) {
            params$unit_TT_price),
     times = 14
   )
-  v_GD2_cool_off      <- rep(x = 0, times = 35)
-  v_TT_cool_off       <- rep(x = 0, times = 30)
+  v_GD2_cool_off      <- rep(x = 0, times = 9)
+  v_TT_cool_off       <- rep(x = 0, times = 16)
   v_annual_GD2_costs  <- c(
     rep(x = c(v_GD2_dosage_cycle, v_TT_dosage_cycle, v_GD2_cool_off), 5),
     v_TT_dosage_cycle, v_GD2_cool_off

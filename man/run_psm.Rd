@@ -4,7 +4,7 @@
 \alias{run_psm}
 \title{Run Partitioned Survival Model (PSM)}
 \usage{
-run_psm(models_fit, l_params)
+run_psm(models_fit = NeuroblastomaPSM::parametric_models, l_params)
 }
 \arguments{
 \item{models_fit}{A named list of fitted survival models.}
@@ -57,7 +57,11 @@ params <- list(
 
 # Run the Partitioned Survival Model
 l_psm_results <- NeuroblastomaPSM::run_psm(
-  models_fit = models_fit,
+  models_fit = NeuroblastomaPSM::parametric_models,
+  l_params = params
+)
+# Run the Partitioned Survival Model
+l_psm_results <- NeuroblastomaPSM::run_psm(
   l_params = params
 )
 }

@@ -46,12 +46,16 @@
 #'
 #' # Run the Partitioned Survival Model
 #' l_psm_results <- NeuroblastomaPSM::run_psm(
-#'   models_fit = models_fit,
+#'   models_fit = NeuroblastomaPSM::parametric_models,
+#'   l_params = params
+#' )
+#' # Run the Partitioned Survival Model
+#' l_psm_results <- NeuroblastomaPSM::run_psm(
 #'   l_params = params
 #' )
 #' }
 run_psm <- function(
-    models_fit,
+    models_fit = NeuroblastomaPSM::parametric_models,
     l_params) {
   # Predict cumulative survival
   df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
