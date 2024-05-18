@@ -11,10 +11,13 @@
 #'   \item \code{time_horizon}: The time horizon for the model in years.
 #'   \item \code{cycles_per_year}: The number of cycles per year.
 #'   \item \code{body_weight}: The body weight of the patient in kilograms.
-#'   \item \code{unit_GD2_mg}: The dosage unit for GD2 in milligrams.
-#'   \item \code{unit_GD2_price}: The price per unit dosage of GD2.
-#'   \item \code{unit_TT_mg}: The dosage unit for TT in milligrams.
-#'   \item \code{unit_TT_price}: The price per unit dosage of TT.
+#'   \item \code{GD2_unit_mg}: The dosage unit for GD2 in milligrams.
+#'   \item \code{GD2_unit_price}: The price per unit dosage of GD2.
+#'   \item \code{GD2_dose_days}: The number of days GD2 is administered in a
+#'   cycle.
+#'   \item \code{TT_unit_mg}: The dosage unit for TT in milligrams.
+#'   \item \code{TT_unit_price}: The price per unit dosage of TT.
+#'   \item \code{TT_dose_days}: The number of days TT is administered in a cycle.
 #'   \item \code{c_PPS}: The costs associated with post-progression survival.
 #'   \item \code{u_EFS}: The utility associated with event-free survival.
 #'   \item \code{u_PPS}: The utility associated with post-progression survival.
@@ -34,11 +37,13 @@
 #'   time_horizon = 10,
 #'   cycles_per_year = 12,
 #'   body_weight = 15,
-#'   unit_GD2_mg = 20,
-#'   unit_GD2_price = 2000,
-#'   unit_TT_mg = 10,
-#'   unit_TT_price = 3000,
-#'   c_PPS = 3200,
+#'   GD2_unit_mg = 20,
+#'   GD2_unit_price = 2000,
+#'   GD2_dose_days = 10,
+#'   TT_unit_mg = 10,
+#'   TT_unit_price = 3000,
+#'   TT_dose_days = 14,
+#'   c_PPS = 4000,
 #'   u_EFS = 0.23,
 #'   u_PPS = 0.23,
 #'   disc_rate_costs = 0.035,
@@ -62,7 +67,9 @@
 #'   params = params
 #' )
 #' }
-perform_economic_analysis <- function(df_markov_trace, params) {
+perform_economic_analysis <- function(
+    df_markov_trace,
+    params) {
   # Create treatment specific Markov trace matrices (for matrix multiplication)
   m_TR_Isotretinoin <- as.matrix(
     x = df_markov_trace[
@@ -131,16 +138,23 @@ perform_economic_analysis <- function(df_markov_trace, params) {
 #'   \item \code{time_horizon}: The time horizon for the model in years.
 #'   \item \code{cycles_per_year}: The number of cycles per year.
 #'   \item \code{body_weight}: The body weight of the patient in kilograms.
-#'   \item \code{unit_GD2_mg}: The dosage unit for GD2 in milligrams.
-#'   \item \code{unit_GD2_price}: The price per unit dosage of GD2.
-#'   \item \code{unit_TT_mg}: The dosage unit for TT in milligrams.
-#'   \item \code{unit_TT_price}: The price per unit dosage of TT.
+#'   \item \code{GD2_unit_mg}: The dosage unit for GD2 in milligrams.
+#'   \item \code{GD2_unit_price}: The price per unit dosage of GD2.
+#'   \item \code{GD2_dose_days}: The number of days GD2 is administered in a
+#'   cycle.
+#'   \item \code{TT_unit_mg}: The dosage unit for TT in milligrams.
+#'   \item \code{TT_unit_price}: The price per unit dosage of TT.
+#'   \item \code{TT_dose_days}: The number of days TT is administered in a cycle.
 #'   \item \code{c_PPS}: The costs associated with post-progression survival.
 #'   \item \code{u_EFS}: The utility associated with event-free survival.
 #'   \item \code{u_PPS}: The utility associated with post-progression survival.
 #'   \item \code{disc_rate_costs}: The annual discount rate for incurred costs.
 #'   \item \code{disc_rate_qalys}: The annual discount rate for accrued QALYs.
 #' }
+#' @param GD2_off_dose_days The number of days GD2 is not administered in a
+#' cycle. Default value is `10` days.
+#' @param TT_off_dose_days The number of days TT is not administered in a cycle.
+#' Default value is `16` days.
 #' @return A matrix of treatment costs for the first year, with columns for GD2
 #' and TT costs over the specified time points.
 #' @examples
@@ -150,10 +164,12 @@ perform_economic_analysis <- function(df_markov_trace, params) {
 #'   time_horizon = 10,
 #'   cycles_per_year = 12,
 #'   body_weight = 15,
-#'   unit_GD2_mg = 20,
-#'   unit_GD2_price = 2000,
-#'   unit_TT_mg = 10,
-#'   unit_TT_price = 3000,
+#'   GD2_unit_mg = 20,
+#'   GD2_unit_price = 2000,
+#'   GD2_dose_days = 10,
+#'   TT_unit_mg = 10,
+#'   TT_unit_price = 3000,
+#'   TT_dose_days = 14,
 #'   c_PPS = 4000
 #' )
 #'
@@ -161,7 +177,10 @@ perform_economic_analysis <- function(df_markov_trace, params) {
 #' l_treatment_costs <- calculate_treatment_costs(params = params)
 #' View(l_treatment_costs)
 #' }
-calculate_treatment_costs <- function(params) {
+calculate_treatment_costs <- function(
+    params,
+    GD2_off_dose_days = 9,
+    TT_off_dose_days = 16) {
   # Get model cycle time points
   time_points <- seq(
     from = 0,
@@ -174,17 +193,23 @@ calculate_treatment_costs <- function(params) {
 
   # Dosage per child per cycle in mg
   v_GD2_dosage_cycle <- rep(# mg GD2/day x bsa x days
-    x = (ceiling((100 * surface_area) / params$unit_GD2_mg) *
-           params$unit_GD2_price),
-    times = 10
+    x = (ceiling((100 * surface_area) / params$GD2_unit_mg) *
+           params$GD2_unit_price),
+    times = params$GD2_dose_days
   )
   v_TT_dosage_cycle  <- rep(# mg  TT/day x bsa x days
-    x = (ceiling((160 * surface_area) / params$unit_TT_mg) *
-           params$unit_TT_price),
-    times = 14
+    x = (ceiling((160 * surface_area) / params$TT_unit_mg) *
+           params$TT_unit_price),
+    times = params$TT_dose_days
   )
-  v_GD2_cool_off      <- rep(x = 0, times = 9)
-  v_TT_cool_off       <- rep(x = 0, times = 16)
+  v_GD2_cool_off      <- rep(
+    x = 0,
+    times = GD2_off_dose_days
+  )
+  v_TT_cool_off       <- rep(
+    x = 0,
+    times = TT_off_dose_days
+  )
   v_annual_GD2_costs  <- c(
     rep(x = c(v_GD2_dosage_cycle, v_TT_dosage_cycle, v_GD2_cool_off), 5),
     v_TT_dosage_cycle, v_GD2_cool_off
@@ -210,7 +235,12 @@ calculate_treatment_costs <- function(params) {
 
   # Summing costs to the values specified by 'points'
   # Create intervals for days in the year based on 'points'
-  intervals <- cut(m_annual_costs[, "days_in_year"], breaks = points, include.lowest = TRUE, right = FALSE)
+  intervals <- cut(
+    x = m_annual_costs[, "days_in_year"],
+    breaks = points,
+    include.lowest = TRUE,
+    right = FALSE
+  )
 
   # Costs over the time_points
   m_C_Dinutuximab_β <- cbind(
@@ -221,7 +251,10 @@ calculate_treatment_costs <- function(params) {
         FUN = sum
       ) |>
         `rownames<-`(NULL),
-      rep(0, length.out = length(time_points) - length(unique(factor(intervals))))
+      rep(
+        x = 0,
+        length.out = length(time_points) - length(unique(factor(intervals)))
+      )
     ),
     PPS = params$c_PPS,
     D = 0
@@ -234,7 +267,10 @@ calculate_treatment_costs <- function(params) {
         FUN = sum
       ) |>
         `rownames<-`(NULL),
-      rep(0, length.out = length(time_points) - length(unique(factor(intervals))))
+      rep(
+        x = 0,
+        length.out = length(time_points) - length(unique(factor(intervals)))
+      )
     ),
     PPS = params$c_PPS,
     D = 0

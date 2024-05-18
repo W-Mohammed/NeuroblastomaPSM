@@ -10,10 +10,13 @@
 #'   \item \code{time_horizon}: The time horizon for the model in years.
 #'   \item \code{cycles_per_year}: The number of cycles per year.
 #'   \item \code{body_weight}: The body weight of the patient in kilograms.
-#'   \item \code{unit_GD2_mg}: The dosage unit for GD2 in milligrams.
-#'   \item \code{unit_GD2_price}: The price per unit dosage of GD2.
-#'   \item \code{unit_TT_mg}: The dosage unit for TT in milligrams.
-#'   \item \code{unit_TT_price}: The price per unit dosage of TT.
+#'   \item \code{GD2_unit_mg}: The dosage unit for GD2 in milligrams.
+#'   \item \code{GD2_unit_price}: The price per unit dosage of GD2.
+#'   \item \code{GD2_dose_days}: The number of days GD2 is administered in a
+#'   cycle.
+#'   \item \code{TT_unit_mg}: The dosage unit for TT in milligrams.
+#'   \item \code{TT_unit_price}: The price per unit dosage of TT.
+#'   \item \code{TT_dose_days}: The number of days TT is administered in a cycle.
 #'   \item \code{c_PPS}: The costs associated with post-progression survival.
 #'   \item \code{u_EFS}: The utility associated with event-free survival.
 #'   \item \code{u_PPS}: The utility associated with post-progression survival.
@@ -33,11 +36,13 @@
 #'   time_horizon = 10,
 #'   cycles_per_year = 12,
 #'   body_weight = 15,
-#'   unit_GD2_mg = 20,
-#'   unit_GD2_price = 2000,
-#'   unit_TT_mg = 10,
-#'   unit_TT_price = 3000,
-#'   c_PPS = 3200,
+#'   GD2_unit_mg = 20,
+#'   GD2_unit_price = 2000,
+#'   GD2_dose_days = 10,
+#'   TT_unit_mg = 10,
+#'   TT_unit_price = 3000,
+#'   TT_dose_days = 14,
+#'   c_PPS = 4000,
 #'   u_EFS = 0.23,
 #'   u_PPS = 0.23,
 #'   disc_rate_costs = 0.035,
