@@ -4,48 +4,79 @@
 \alias{calculate_treatment_costs}
 \title{Calculate Treatment Costs}
 \usage{
-calculate_treatment_costs(params, GD2_off_dose_days = 9, TT_off_dose_days = 16)
+calculate_treatment_costs(
+  params,
+  GD2_cycle_days = 35,
+  TT_cycle_days = 30,
+  Temo_cycle_days = 21,
+  Iri_cycle_days = 21
+)
 }
 \arguments{
 \item{params}{A list of model parameters including:
 \itemize{
   \item \code{time_horizon}: The time horizon for the model in years.
-  \item \code{cycles_per_year}: The number of cycles per year.
+  \item \code{cycle_length}: The length of a model cycle measured in years.
   \item \code{body_weight}: The body weight of the patient in kilograms.
-  \item \code{GD2_unit_mg}: The dosage unit for GD2 in milligrams.
+  \item \code{GD2_unit_mg}: The dosage unit for GD2 in milligrams. Default is
+  `20` mg.
   \item \code{GD2_unit_price}: The price per unit dosage of GD2.
   \item \code{GD2_dose_days}: The number of days GD2 is administered in a
   cycle.
-  \item \code{TT_unit_mg}: The dosage unit for TT in milligrams.
+  \item \code{TT_unit_mg}: The dosage unit for TT in milligrams. Default is
+  `10` mg.
   \item \code{TT_unit_price}: The price per unit dosage of TT.
-  \item \code{TT_dose_days}: The number of days TT is administered in a cycle.
-  \item \code{c_PPS}: The costs associated with post-progression survival.
+  \item \code{TT_dose_days}: The number of days TT is administered in a
+  cycle.
+  \item \code{GD2_aEvents_names}: A vector containing the names of the
+  adverse events associated with GD2.
+  \item \code{GD2_aEvents_probs}: A named vector containing the annual
+  probability of each GD2 adverse event.
+  \item \code{GD2_aEvents_costs}: A named vector containing the costs
+  associated with each GD2 adverse event.
+  \item \code{Temo_unit_mg}: The dosage unit for Temozolomide in milligrams.
+  Default is `50` mg.
+  \item \code{Temo_unit_price}: The price per unit dosage of Temozolomide.
+  \item \code{Temo_dose_days}: The number of days Temozolomide is
+  administered in a cycle. Default is `5` days.
+  \item \code{Iri_unit_mg}: The dosage unit for Irinotecan in milligrams.
+  Default is `40` mg.
+  \item \code{Iri_unit_price}: The price per unit dosage of Irinotecan.
+  \item \code{Iri_dose_days}: The number of days Irinotecan is administered in
+  a cycle. Default is `5` days.
   \item \code{u_EFS}: The utility associated with event-free survival.
   \item \code{u_PPS}: The utility associated with post-progression survival.
   \item \code{disc_rate_costs}: The annual discount rate for incurred costs.
   \item \code{disc_rate_qalys}: The annual discount rate for accrued QALYs.
 }}
 
-\item{GD2_off_dose_days}{The number of days GD2 is not administered in a
-cycle. Default value is `10` days.}
+\item{GD2_cycle_days}{The number of days in a GD2 treatment cycle. Default
+value is `35` days.}
 
-\item{TT_off_dose_days}{The number of days TT is not administered in a cycle.
-Default value is `16` days.}
+\item{TT_cycle_days}{The number of days in a TT treatment cycle. Default
+value is `30` days.}
+
+\item{Temo_cycle_days}{The number of days in a Temozolomide treatment cycle.
+Default value is `21` days.}
+
+\item{Iri_cycle_days}{The number of days in a Irinotecan treatment cycle.
+Default value is `21` days.}
 }
 \value{
 A matrix of treatment costs for the first year, with columns for GD2
 and TT costs over the specified time points.
 }
 \description{
-This function calculates the treatment costs over a given time horizon, based
-on the provided model parameters.
+This function calculates the treatment costs, , `Dinutuximab β` (GD2) and
+`Isotretinoin` (TT). including the costs of managing any associated adverse
+events, over a given time horizon.
 }
 \examples{
 \dontrun{
 # Define model parameters
 params <- list(
   time_horizon = 10,
-  cycles_per_year = 12,
+  cycle_length = 1/12,
   body_weight = 15,
   GD2_unit_mg = 20,
   GD2_unit_price = 2000,
@@ -53,7 +84,34 @@ params <- list(
   TT_unit_mg = 10,
   TT_unit_price = 3000,
   TT_dose_days = 14,
-  c_PPS = 4000
+  GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
+    "hypersensitivity_reaction", "capillary_leak"),
+  GD2_aEvents_probs = c(
+    "fever" = 0.18,
+    "diarrhea" = 0.07,
+    "vomiting" = 0.06,
+    "infection" = 0.21,
+    "hypersensitivity_reaction" = 0.11,
+    "capillary_leak" = 0.06
+  ),
+  GD2_aEvents_costs = c(
+    "fever" = 1.98,
+    "diarrhea" = 3.2,
+    "vomiting" = 8.45,
+    "infection" = 222.33,
+    "hypersensitivity_reaction" = 4.13,
+    "capillary_leak" = 307.37
+  ),
+  Temo_unit_mg = 50,
+  Temo_unit_price = 2000,
+  Temo_dose_days = 5,
+  Iri_unit_mg = 40,
+  Iri_unit_price = 3000,
+  Iri_dose_days = 5,
+  u_EFS = 0.23,
+  u_PPS = 0.23,
+  disc_rate_costs = 0.035,
+  disc_rate_qalys = 0.015
 )
 
 # Calculate treatment costs
