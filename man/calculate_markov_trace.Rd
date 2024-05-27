@@ -25,44 +25,12 @@ health states based on predicted survival curves.
 models_fit <- NeuroblastomaPSM::parametric_models
 
 # Define model parameters
-params <- list(
+params <- c(
   time_horizon = 10,
   cycle_length = 1/12,
-  body_weight = 15,
-  GD2_unit_mg = 20,
-  GD2_unit_price = 2000,
-  GD2_dose_days = 10,
-  TT_unit_mg = 10,
-  TT_unit_price = 3000,
-  TT_dose_days = 14,
-  GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
-    "hypersensitivity_reaction", "capillary_leak"),
-  GD2_aEvents_probs = c(
-    "fever" = 0.18,
-    "diarrhea" = 0.07,
-    "vomiting" = 0.06,
-    "infection" = 0.21,
-    "hypersensitivity_reaction" = 0.11,
-    "capillary_leak" = 0.06
-  ),
-  GD2_aEvents_costs = c(
-    "fever" = 1.98,
-    "diarrhea" = 3.2,
-    "vomiting" = 8.45,
-    "infection" = 222.33,
-    "hypersensitivity_reaction" = 4.13,
-    "capillary_leak" = 307.37
-  ),
-  Temo_unit_mg = 50,
-  Temo_unit_price = 2000,
-  Temo_dose_days = 5,
-  Iri_unit_mg = 40,
-  Iri_unit_price = 3000,
-  Iri_dose_days = 5,
-  u_EFS = 0.23,
-  u_PPS = 0.23,
   disc_rate_costs = 0.035,
-  disc_rate_qalys = 0.015
+  disc_rate_qalys = 0.015,
+  NeuroblastomaPSM::l_psm_parameters
 )
 
 # Predict cumulative survival

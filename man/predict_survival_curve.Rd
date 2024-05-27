@@ -33,6 +33,7 @@ fit <- survival::survfit(
     survival::Surv(eventtime, event) ~ 1,
     data = IPD_data[IPD_data$trt_cd == "TT",]
 )
+
 survival_curve <- predict_survival_curve(
     surv_mod = fit,
     treatment_name = "Isotretinoin",

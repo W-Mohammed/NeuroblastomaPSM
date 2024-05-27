@@ -7,39 +7,11 @@
 calculate_pps_costs(params, Temo_cycle_days, Iri_cycle_days)
 }
 \arguments{
-\item{params}{A list of model parameters including:
+\item{params}{A list of model parameters including the list of parameters in
+the list \code{\link{l_psm_parameters}} in addition to:
 \itemize{
   \item \code{time_horizon}: The time horizon for the model in years.
   \item \code{cycle_length}: The length of a model cycle measured in years.
-  \item \code{body_weight}: The body weight of the patient in kilograms.
-  \item \code{GD2_unit_mg}: The dosage unit for GD2 in milligrams. Default is
-  `20` mg.
-  \item \code{GD2_unit_price}: The price per unit dosage of GD2.
-  \item \code{GD2_dose_days}: The number of days GD2 is administered in a
-  cycle.
-  \item \code{TT_unit_mg}: The dosage unit for TT in milligrams. Default is
-  `10` mg.
-  \item \code{TT_unit_price}: The price per unit dosage of TT.
-  \item \code{TT_dose_days}: The number of days TT is administered in a
-  cycle.
-  \item \code{GD2_aEvents_names}: A vector containing the names of the
-  adverse events associated with GD2.
-  \item \code{GD2_aEvents_probs}: A named vector containing the annual
-  probability of each GD2 adverse event.
-  \item \code{GD2_aEvents_costs}: A named vector containing the costs
-  associated with each GD2 adverse event.
-  \item \code{Temo_unit_mg}: The dosage unit for Temozolomide in milligrams.
-  Default is `50` mg.
-  \item \code{Temo_unit_price}: The price per unit dosage of Temozolomide.
-  \item \code{Temo_dose_days}: The number of days Temozolomide is
-  administered in a cycle. Default is `5` days.
-  \item \code{Iri_unit_mg}: The dosage unit for Irinotecan in milligrams.
-  Default is `40` mg.
-  \item \code{Iri_unit_price}: The price per unit dosage of Irinotecan.
-  \item \code{Iri_dose_days}: The number of days Irinotecan is administered in
-  a cycle. Default is `5` days.
-  \item \code{u_EFS}: The utility associated with event-free survival.
-  \item \code{u_PPS}: The utility associated with post-progression survival.
   \item \code{disc_rate_costs}: The annual discount rate for incurred costs.
   \item \code{disc_rate_qalys}: The annual discount rate for accrued QALYs.
 }}
@@ -59,44 +31,12 @@ Calculate Post Progression Survival (PPS) Costs
 \examples{
 \dontrun{
 # Define model parameters
-params <- list(
+params <- c(
   time_horizon = 10,
   cycle_length = 1/12,
-  body_weight = 15,
-  GD2_unit_mg = 20,
-  GD2_unit_price = 2000,
-  GD2_dose_days = 10,
-  TT_unit_mg = 10,
-  TT_unit_price = 3000,
-  TT_dose_days = 14,
-  GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
-    "hypersensitivity_reaction", "capillary_leak"),
-  GD2_aEvents_probs = c(
-    "fever" = 0.18,
-    "diarrhea" = 0.07,
-    "vomiting" = 0.06,
-    "infection" = 0.21,
-    "hypersensitivity_reaction" = 0.11,
-    "capillary_leak" = 0.06
-  ),
-  GD2_aEvents_costs = c(
-    "fever" = 1.98,
-    "diarrhea" = 3.2,
-    "vomiting" = 8.45,
-    "infection" = 222.33,
-    "hypersensitivity_reaction" = 4.13,
-    "capillary_leak" = 307.37
-  ),
-  Temo_unit_mg = 50,
-  Temo_unit_price = 2000,
-  Temo_dose_days = 5,
-  Iri_unit_mg = 40,
-  Iri_unit_price = 3000,
-  Iri_dose_days = 5,
-  u_EFS = 0.23,
-  u_PPS = 0.23,
   disc_rate_costs = 0.035,
-  disc_rate_qalys = 0.015
+  disc_rate_qalys = 0.015,
+  NeuroblastomaPSM::l_psm_parameters
 )
 
 # Calculate treatment costs
@@ -105,6 +45,7 @@ pps_costs <- calculate_pps_costs(
  Temo_cycle_days = 21,
  Iri_cycle_days = 21
 )
+
 pps_costs
 }
 }

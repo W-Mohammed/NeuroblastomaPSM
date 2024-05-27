@@ -6,89 +6,25 @@
 #'
 #' @param df_markov_trace A data frame containing the Markov trace with columns
 #' for time, treatment, and state occupancies (`EFS`, `PPS`, `D`).
-#' @param params A list of model parameters including:
-#' \itemize{
-#'   \item \code{time_horizon}: The time horizon for the model in years.
-#'   \item \code{cycle_length}: The length of a model cycle measured in years.
-#'   \item \code{body_weight}: The body weight of the patient in kilograms.
-#'   \item \code{GD2_unit_mg}: The dosage unit for GD2 in milligrams. Default is
-#'   `20` mg.
-#'   \item \code{GD2_unit_price}: The price per unit dosage of GD2.
-#'   \item \code{GD2_dose_days}: The number of days GD2 is administered in a
-#'   cycle.
-#'   \item \code{TT_unit_mg}: The dosage unit for TT in milligrams. Default is
-#'   `10` mg.
-#'   \item \code{TT_unit_price}: The price per unit dosage of TT.
-#'   \item \code{TT_dose_days}: The number of days TT is administered in a
-#'   cycle.
-#'   \item \code{GD2_aEvents_names}: A vector containing the names of the
-#'   adverse events associated with GD2.
-#'   \item \code{GD2_aEvents_probs}: A named vector containing the annual
-#'   probability of each GD2 adverse event.
-#'   \item \code{GD2_aEvents_costs}: A named vector containing the costs
-#'   associated with each GD2 adverse event.
-#'   \item \code{Temo_unit_mg}: The dosage unit for Temozolomide in milligrams.
-#'   Default is `50` mg.
-#'   \item \code{Temo_unit_price}: The price per unit dosage of Temozolomide.
-#'   \item \code{Temo_dose_days}: The number of days Temozolomide is
-#'   administered in a cycle. Default is `5` days.
-#'   \item \code{Iri_unit_mg}: The dosage unit for Irinotecan in milligrams.
-#'   Default is `40` mg.
-#'   \item \code{Iri_unit_price}: The price per unit dosage of Irinotecan.
-#'   \item \code{Iri_dose_days}: The number of days Irinotecan is administered in
-#'   a cycle. Default is `5` days.
-#'   \item \code{u_EFS}: The utility associated with event-free survival.
-#'   \item \code{u_PPS}: The utility associated with post-progression survival.
-#'   \item \code{disc_rate_costs}: The annual discount rate for incurred costs.
-#'   \item \code{disc_rate_qalys}: The annual discount rate for accrued QALYs.
-#' }
-#' @return A list containing two scalars: discounted costs (`v_Dcosts_results`)
-#' and discounted QALYs (`v_Dqalys_results`) for each treatment.
+#' @inheritParams run_psm
+#'
+#' @return A vector containing two scalars: discounted costs and discounted
+#' QALYs for each treatment.
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Load the fitted Gompertz model parameters
 #' models_fit <- NeuroblastomaPSM::parametric_models
 #'
 #' # Define model parameters
-#' params <- list(
+#' params <- c(
 #'   time_horizon = 10,
 #'   cycle_length = 1/12,
-#'   body_weight = 15,
-#'   GD2_unit_mg = 20,
-#'   GD2_unit_price = 2000,
-#'   GD2_dose_days = 10,
-#'   TT_unit_mg = 10,
-#'   TT_unit_price = 3000,
-#'   TT_dose_days = 14,
-#'   GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
-#'     "hypersensitivity_reaction", "capillary_leak"),
-#'   GD2_aEvents_probs = c(
-#'     "fever" = 0.18,
-#'     "diarrhea" = 0.07,
-#'     "vomiting" = 0.06,
-#'     "infection" = 0.21,
-#'     "hypersensitivity_reaction" = 0.11,
-#'     "capillary_leak" = 0.06
-#'   ),
-#'   GD2_aEvents_costs = c(
-#'     "fever" = 1.98,
-#'     "diarrhea" = 3.2,
-#'     "vomiting" = 8.45,
-#'     "infection" = 222.33,
-#'     "hypersensitivity_reaction" = 4.13,
-#'     "capillary_leak" = 307.37
-#'   ),
-#'   Temo_unit_mg = 50,
-#'   Temo_unit_price = 2000,
-#'   Temo_dose_days = 5,
-#'   Iri_unit_mg = 40,
-#'   Iri_unit_price = 3000,
-#'   Iri_dose_days = 5,
-#'   u_EFS = 0.23,
-#'   u_PPS = 0.23,
 #'   disc_rate_costs = 0.035,
-#'   disc_rate_qalys = 0.015
+#'   disc_rate_qalys = 0.015,
+#'   NeuroblastomaPSM::l_psm_parameters
 #' )
 #'
 #' # Predict cumulative survival
@@ -103,10 +39,12 @@
 #' )
 #'
 #' # Perform Economic Analysis
-#' l_psm_results <- NeuroblastomaPSM::perform_economic_analysis(
+#' v_psm_results <- NeuroblastomaPSM::perform_economic_analysis(
 #'   df_markov_trace = df_markov_trace,
 #'   params = params
 #' )
+#'
+#' v_psm_results
 #' }
 perform_economic_analysis <- function(
     df_markov_trace,
@@ -149,22 +87,24 @@ perform_economic_analysis <- function(
   # Prepare un-discounted results
   v_costs_results <- cbind(rowSums(m_costs_Isotretinoin),
                            rowSums(m_costs_Dinutuximab_β)) |>
-    `colnames<-`(c("c_Isotretinoin", "c_Dinutuximab_β"))
+    `colnames<-`(c("costs_Isotretinoin", "costs_Dinutuximab_β"))
   v_qalys_results <- cbind(v_qalys_Isotretinoin, v_qalys_Dinutuximab_β) |>
-    `colnames<-`(c("q_Isotretinoin", "q_Dinutuximab_β"))
+    `colnames<-`(c("qalys_Isotretinoin", "qalys_Dinutuximab_β"))
 
   # Prepare discounted results
   v_Dcosts_results <- v_dw_c %*% v_costs_results |>
-    `colnames<-`(c("Isotretinoin", "Dinutuximab_β"))
+    `colnames<-`(c("Dcosts_Isotretinoin", "Dcosts_Dinutuximab_β")) |>
+    _[1, ]
   v_Dqalys_results <- v_dw_e %*% v_qalys_results |>
-    `colnames<-`(c("Isotretinoin", "Dinutuximab_β"))
+    `colnames<-`(c("Dqalys_Isotretinoin", "Dqalys_Dinutuximab_β")) |>
+    _[1, ]
 
   return(
-    list(
-      v_costs_results = colSums(v_costs_results),
-      v_sqalys_results = colSums(v_qalys_results),
-      v_Dcosts_results = v_Dcosts_results,
-      v_Dqalys_results = v_Dqalys_results
+    c(
+      colSums(v_costs_results),
+      colSums(v_qalys_results),
+      v_Dcosts_results,
+      v_Dqalys_results
     )
   )
 }
@@ -184,54 +124,26 @@ perform_economic_analysis <- function(
 #' Default value is `21` days.
 #' @param Iri_cycle_days The number of days in a Irinotecan treatment cycle.
 #' Default value is `21` days.
+#'
 #' @return A matrix of treatment costs for the first year, with columns for GD2
 #' and TT costs over the specified time points.
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Define model parameters
-#' params <- list(
+#' params <- c(
 #'   time_horizon = 10,
 #'   cycle_length = 1/12,
-#'   body_weight = 15,
-#'   GD2_unit_mg = 20,
-#'   GD2_unit_price = 2000,
-#'   GD2_dose_days = 10,
-#'   TT_unit_mg = 10,
-#'   TT_unit_price = 3000,
-#'   TT_dose_days = 14,
-#'   GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
-#'     "hypersensitivity_reaction", "capillary_leak"),
-#'   GD2_aEvents_probs = c(
-#'     "fever" = 0.18,
-#'     "diarrhea" = 0.07,
-#'     "vomiting" = 0.06,
-#'     "infection" = 0.21,
-#'     "hypersensitivity_reaction" = 0.11,
-#'     "capillary_leak" = 0.06
-#'   ),
-#'   GD2_aEvents_costs = c(
-#'     "fever" = 1.98,
-#'     "diarrhea" = 3.2,
-#'     "vomiting" = 8.45,
-#'     "infection" = 222.33,
-#'     "hypersensitivity_reaction" = 4.13,
-#'     "capillary_leak" = 307.37
-#'   ),
-#'   Temo_unit_mg = 50,
-#'   Temo_unit_price = 2000,
-#'   Temo_dose_days = 5,
-#'   Iri_unit_mg = 40,
-#'   Iri_unit_price = 3000,
-#'   Iri_dose_days = 5,
-#'   u_EFS = 0.23,
-#'   u_PPS = 0.23,
 #'   disc_rate_costs = 0.035,
-#'   disc_rate_qalys = 0.015
+#'   disc_rate_qalys = 0.015,
+#'   NeuroblastomaPSM::l_psm_parameters
 #' )
 #'
 #' # Calculate treatment costs
 #' l_treatment_costs <- calculate_treatment_costs(params = params)
+#'
 #' View(l_treatment_costs)
 #' }
 calculate_treatment_costs <- function(
@@ -280,50 +192,21 @@ calculate_treatment_costs <- function(
 #' interventions, `Dinutuximab β` (GD2) and `Isotretinoin` (TT).
 #'
 #' @inheritParams calculate_treatment_costs
+#'
 #' @return A list containing `Dinutuximab β` (GD2) and `Isotretinoin` (TT) costs
 #' over the model time-horizon.
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Define model parameters
-#' params <- list(
+#' params <- c(
 #'   time_horizon = 10,
 #'   cycle_length = 1/12,
-#'   body_weight = 15,
-#'   GD2_unit_mg = 20,
-#'   GD2_unit_price = 2000,
-#'   GD2_dose_days = 10,
-#'   TT_unit_mg = 10,
-#'   TT_unit_price = 3000,
-#'   TT_dose_days = 14,
-#'   GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
-#'     "hypersensitivity_reaction", "capillary_leak"),
-#'   GD2_aEvents_probs = c(
-#'     "fever" = 0.18,
-#'     "diarrhea" = 0.07,
-#'     "vomiting" = 0.06,
-#'     "infection" = 0.21,
-#'     "hypersensitivity_reaction" = 0.11,
-#'     "capillary_leak" = 0.06
-#'   ),
-#'   GD2_aEvents_costs = c(
-#'     "fever" = 1.98,
-#'     "diarrhea" = 3.2,
-#'     "vomiting" = 8.45,
-#'     "infection" = 222.33,
-#'     "hypersensitivity_reaction" = 4.13,
-#'     "capillary_leak" = 307.37
-#'   ),
-#'   Temo_unit_mg = 50,
-#'   Temo_unit_price = 2000,
-#'   Temo_dose_days = 5,
-#'   Iri_unit_mg = 40,
-#'   Iri_unit_price = 3000,
-#'   Iri_dose_days = 5,
-#'   u_EFS = 0.23,
-#'   u_PPS = 0.23,
 #'   disc_rate_costs = 0.035,
-#'   disc_rate_qalys = 0.015
+#'   disc_rate_qalys = 0.015,
+#'   NeuroblastomaPSM::l_psm_parameters
 #' )
 #'
 #' # Calculate AE treatment costs
@@ -332,6 +215,7 @@ calculate_treatment_costs <- function(
 #'  GD2_cycle_days = 35,
 #'  TT_cycle_days = 30
 #' )
+#'
 #' l_GD2_efs_costs
 #' }
 calculate_efs_costs <- function(
@@ -466,54 +350,26 @@ calculate_efs_costs <- function(
 #' provided model parameters.
 #'
 #' @inheritParams calculate_treatment_costs
+#'
 #' @return A scalar representing the costs of related to `Dinutuximab β` (GD2)
 #' adverse events.
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Define model parameters
-#' params <- list(
+#' params <- c(
 #'   time_horizon = 10,
 #'   cycle_length = 1/12,
-#'   body_weight = 15,
-#'   GD2_unit_mg = 20,
-#'   GD2_unit_price = 2000,
-#'   GD2_dose_days = 10,
-#'   TT_unit_mg = 10,
-#'   TT_unit_price = 3000,
-#'   TT_dose_days = 14,
-#'   GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
-#'     "hypersensitivity_reaction", "capillary_leak"),
-#'   GD2_aEvents_probs = c(
-#'     "fever" = 0.18,
-#'     "diarrhea" = 0.07,
-#'     "vomiting" = 0.06,
-#'     "infection" = 0.21,
-#'     "hypersensitivity_reaction" = 0.11,
-#'     "capillary_leak" = 0.06
-#'   ),
-#'   GD2_aEvents_costs = c(
-#'     "fever" = 1.98,
-#'     "diarrhea" = 3.2,
-#'     "vomiting" = 8.45,
-#'     "infection" = 222.33,
-#'     "hypersensitivity_reaction" = 4.13,
-#'     "capillary_leak" = 307.37
-#'   ),
-#'   Temo_unit_mg = 50,
-#'   Temo_unit_price = 2000,
-#'   Temo_dose_days = 5,
-#'   Iri_unit_mg = 40,
-#'   Iri_unit_price = 3000,
-#'   Iri_dose_days = 5,
-#'   u_EFS = 0.23,
-#'   u_PPS = 0.23,
 #'   disc_rate_costs = 0.035,
-#'   disc_rate_qalys = 0.015
+#'   disc_rate_qalys = 0.015,
+#'   NeuroblastomaPSM::l_psm_parameters
 #' )
 #'
 #' # Calculate AE costs
 #' GD2_ae_costs <- calculate_ae_costs(params = params)
+#'
 #' GD2_ae_costs
 #' }
 calculate_ae_costs <- function(params) {
@@ -524,13 +380,25 @@ calculate_ae_costs <- function(params) {
     by = params$cycle_length
   )
 
+  # Combine GD2 AE probs and costs
+  AE_data <- params[
+    grepl(
+      pattern = paste0(params$GD2_aEvents_names, collapse = "|"),
+      x = names(params)
+    )
+  ]
+  GD2_aEvents_probs <- AE_data[paste0("prob_", params$GD2_aEvents_names)] |>
+    unlist()
+  GD2_aEvents_costs <- AE_data[paste0("cost_", params$GD2_aEvents_names)] |>
+    unlist()
+
   # Re-scaling annual probability
-  GD2_aEvents_rates <- - log(1 - params$GD2_aEvents_probs)
+  GD2_aEvents_rates <- - log(1 - GD2_aEvents_probs)
   reScaled_rates    <- GD2_aEvents_rates * params$cycle_length
   reScaled_probs    <-  1 - exp(- reScaled_rates)
 
   # Calculating AE event cost per model cycle
-  AE_event_costs    <- sum(reScaled_probs * params$GD2_aEvents_costs)
+  AE_event_costs    <- sum(reScaled_probs * GD2_aEvents_costs)
 
   return(AE_event_costs)
 }
@@ -538,49 +406,20 @@ calculate_ae_costs <- function(params) {
 #' Calculate Post Progression Survival (PPS) Costs
 #'
 #' @inheritParams calculate_treatment_costs
+#'
 #' @return A scalar representing the costs associated with PPS.
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Define model parameters
-#' params <- list(
+#' params <- c(
 #'   time_horizon = 10,
 #'   cycle_length = 1/12,
-#'   body_weight = 15,
-#'   GD2_unit_mg = 20,
-#'   GD2_unit_price = 2000,
-#'   GD2_dose_days = 10,
-#'   TT_unit_mg = 10,
-#'   TT_unit_price = 3000,
-#'   TT_dose_days = 14,
-#'   GD2_aEvents_names = c("fever", "diarrhea", "vomiting", "infection",
-#'     "hypersensitivity_reaction", "capillary_leak"),
-#'   GD2_aEvents_probs = c(
-#'     "fever" = 0.18,
-#'     "diarrhea" = 0.07,
-#'     "vomiting" = 0.06,
-#'     "infection" = 0.21,
-#'     "hypersensitivity_reaction" = 0.11,
-#'     "capillary_leak" = 0.06
-#'   ),
-#'   GD2_aEvents_costs = c(
-#'     "fever" = 1.98,
-#'     "diarrhea" = 3.2,
-#'     "vomiting" = 8.45,
-#'     "infection" = 222.33,
-#'     "hypersensitivity_reaction" = 4.13,
-#'     "capillary_leak" = 307.37
-#'   ),
-#'   Temo_unit_mg = 50,
-#'   Temo_unit_price = 2000,
-#'   Temo_dose_days = 5,
-#'   Iri_unit_mg = 40,
-#'   Iri_unit_price = 3000,
-#'   Iri_dose_days = 5,
-#'   u_EFS = 0.23,
-#'   u_PPS = 0.23,
 #'   disc_rate_costs = 0.035,
-#'   disc_rate_qalys = 0.015
+#'   disc_rate_qalys = 0.015,
+#'   NeuroblastomaPSM::l_psm_parameters
 #' )
 #'
 #' # Calculate treatment costs
@@ -589,6 +428,7 @@ calculate_ae_costs <- function(params) {
 #'  Temo_cycle_days = 21,
 #'  Iri_cycle_days = 21
 #' )
+#'
 #' pps_costs
 #' }
 calculate_pps_costs <- function(
