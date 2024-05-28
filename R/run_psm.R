@@ -5,8 +5,8 @@
 #' Neuroblastoma in children.
 #'
 #' @param models_fit A named list of fitted survival models.
-#' @param params A list of model parameters including the list of parameters in
-#' the list \code{\link{l_psm_parameters}} in addition to:
+#' @param l_params A list of model parameters including the list of parameters
+#' in the list \code{\link{l_psm_parameters}} in addition to:
 #' \itemize{
 #'   \item \code{time_horizon}: The time horizon for the model in years.
 #'   \item \code{cycle_length}: The length of a model cycle measured in years.
@@ -54,7 +54,7 @@ run_psm <- function(
   # Predict cumulative survival
   df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
     models_fit = models_fit,
-    params = l_params
+    l_params = l_params
   )
 
   # Generate Markov trace
@@ -65,7 +65,7 @@ run_psm <- function(
   # Perform Economic Analysis
   v_PSM_results <- NeuroblastomaPSM::perform_economic_analysis(
     df_markov_trace = df_markov_trace,
-    params = l_params
+    l_params = l_params
   )
 
   return(v_PSM_results)

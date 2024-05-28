@@ -9,8 +9,8 @@ run_psm(models_fit = NeuroblastomaPSM::parametric_models, l_params)
 \arguments{
 \item{models_fit}{A named list of fitted survival models.}
 
-\item{params}{A list of model parameters including the list of parameters in
-the list \code{\link{l_psm_parameters}} in addition to:
+\item{l_params}{A list of model parameters including the list of parameters
+in the list \code{\link{l_psm_parameters}} in addition to:
 \itemize{
   \item \code{time_horizon}: The time horizon for the model in years.
   \item \code{cycle_length}: The length of a model cycle measured in years.

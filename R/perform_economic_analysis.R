@@ -30,7 +30,7 @@
 #' # Predict cumulative survival
 #' df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
 #'   models_fit = models_fit,
-#'   params = params
+#'   l_params = params
 #' )
 #'
 #' # Generate Markov trace
@@ -41,62 +41,62 @@
 #' # Perform Economic Analysis
 #' v_psm_results <- NeuroblastomaPSM::perform_economic_analysis(
 #'   df_markov_trace = df_markov_trace,
-#'   params = params
+#'   l_params = params
 #' )
 #'
 #' v_psm_results
 #' }
 perform_economic_analysis <- function(
     df_markov_trace,
-    params) {
+    l_params) {
   # Create treatment specific Markov trace matrices (for matrix multiplication)
-  m_TR_Isotretinoin <- as.matrix(
+  m_TR_TT <- as.matrix(
     x = df_markov_trace[
-      df_markov_trace$treatment == "Isotretinoin", c("EFS", "PPS", "D")]
+      df_markov_trace$treatment == "TT", c("EFS", "PPS", "D")]
   )
-  m_TR_Dinutuximab_β <- as.matrix(
+  m_TR_GD2 <- as.matrix(
     x = df_markov_trace[
-      df_markov_trace$treatment == "Dinutuximab β", c("EFS", "PPS", "D")]
+      df_markov_trace$treatment == "GD2", c("EFS", "PPS", "D")]
   )
 
   # Create vectors of health states payoffs
-  v_Util  <- c("EFS" = params$u_EFS, "PPS" = params$u_PPS, "D" = 0)
-  l_costs <- calculate_treatment_costs(params = params)
+  v_Util  <- c("EFS" = l_params$u_EFS, "PPS" = l_params$u_PPS, "D" = 0)
+  l_costs <- calculate_treatment_costs(l_params = l_params)
 
   # Matrix multiplication of trace by:
   ## cost per state per cycle - gives total cost by cycle
-  m_costs_Isotretinoin  <- m_TR_Isotretinoin  * l_costs$m_C_Isotretinoin
-  m_costs_Dinutuximab_β <- m_TR_Dinutuximab_β * l_costs$m_C_Dinutuximab_β
+  m_costs_TT  <- m_TR_TT  * l_costs$m_C_TT
+  m_costs_GD2 <- m_TR_GD2 * l_costs$m_C_GD2
   ## utility by cycle - gives total utility by cycle
-  v_qalys_Isotretinoin  <- m_TR_Isotretinoin %*%
-    (v_Util * params$cycle_length)
-  v_qalys_Dinutuximab_β <- m_TR_Dinutuximab_β %*%
-    (v_Util * params$cycle_length)
+  v_qalys_TT  <- m_TR_TT %*%
+    (v_Util * l_params$cycle_length)
+  v_qalys_GD2 <- m_TR_GD2 %*%
+    (v_Util * l_params$cycle_length)
 
   # Get model cycles time points
   time_points <- seq(
     from = 0,
-    to = params$time_horizon,
-    by = params$cycle_length
+    to = l_params$time_horizon,
+    by = l_params$cycle_length
   )
 
   # Calculate costs and QALYs discount weights
-  v_dw_c <- 1 / (1 + params$disc_rate_costs) ^ time_points
-  v_dw_e <- 1 / (1 + params$disc_rate_qalys) ^ time_points
+  v_dw_c <- 1 / (1 + l_params$disc_rate_costs) ^ time_points
+  v_dw_e <- 1 / (1 + l_params$disc_rate_qalys) ^ time_points
 
   # Prepare un-discounted results
-  v_costs_results <- cbind(rowSums(m_costs_Isotretinoin),
-                           rowSums(m_costs_Dinutuximab_β)) |>
-    `colnames<-`(c("costs_Isotretinoin", "costs_Dinutuximab_β"))
-  v_qalys_results <- cbind(v_qalys_Isotretinoin, v_qalys_Dinutuximab_β) |>
-    `colnames<-`(c("qalys_Isotretinoin", "qalys_Dinutuximab_β"))
+  v_costs_results <- cbind(rowSums(m_costs_TT),
+                           rowSums(m_costs_GD2)) |>
+    `colnames<-`(c("costs_TT", "costs_GD2"))
+  v_qalys_results <- cbind(v_qalys_TT, v_qalys_GD2) |>
+    `colnames<-`(c("qalys_TT", "qalys_GD2"))
 
   # Prepare discounted results
   v_Dcosts_results <- v_dw_c %*% v_costs_results |>
-    `colnames<-`(c("Dcosts_Isotretinoin", "Dcosts_Dinutuximab_β")) |>
+    `colnames<-`(c("Dcosts_TT", "Dcosts_GD2")) |>
     _[1, ]
   v_Dqalys_results <- v_dw_e %*% v_qalys_results |>
-    `colnames<-`(c("Dqalys_Isotretinoin", "Dqalys_Dinutuximab_β")) |>
+    `colnames<-`(c("Dqalys_TT", "Dqalys_GD2")) |>
     _[1, ]
 
   return(
@@ -142,37 +142,39 @@ perform_economic_analysis <- function(
 #' )
 #'
 #' # Calculate treatment costs
-#' l_treatment_costs <- calculate_treatment_costs(params = params)
+#' l_treatment_costs <- NeuroblastomaPSM::calculate_treatment_costs(
+#'    l_params = params
+#' )
 #'
 #' View(l_treatment_costs)
 #' }
 calculate_treatment_costs <- function(
-    params,
+    l_params,
     GD2_cycle_days = 35,
     TT_cycle_days = 30,
     Temo_cycle_days = 21,
     Iri_cycle_days = 21) {
   # Estimate EFS costs
   l_efs_costs <- calculate_efs_costs(
-    params = params,
+    l_params = l_params,
     GD2_cycle_days = GD2_cycle_days,
     TT_cycle_days = TT_cycle_days
   )
 
   # Estimate PPS costs
   v_pps_costs <- calculate_pps_costs(
-    params = params,
+    l_params = l_params,
     Temo_cycle_days = Temo_cycle_days,
     Iri_cycle_days = Iri_cycle_days
   )
 
   # Get intervention groups costs together
-  m_C_Dinutuximab_β <- cbind(
+  m_C_GD2 <- cbind(
     EFS = l_efs_costs$GD2_EFS_costs,
     PPS = v_pps_costs,
     D = 0
   )
-  m_C_Isotretinoin <- cbind(
+  m_C_TT <- cbind(
     EFS = l_efs_costs$TT_EFS_costs,
     PPS = v_pps_costs,
     D = 0
@@ -180,8 +182,8 @@ calculate_treatment_costs <- function(
 
   return(
     list(
-      m_C_Dinutuximab_β = m_C_Dinutuximab_β,
-      m_C_Isotretinoin = m_C_Isotretinoin
+      m_C_GD2 = m_C_GD2,
+      m_C_TT = m_C_TT
     )
   )
 }
@@ -210,8 +212,8 @@ calculate_treatment_costs <- function(
 #' )
 #'
 #' # Calculate AE treatment costs
-#' l_GD2_efs_costs <- calculate_efs_costs(
-#'  params = params,
+#' l_GD2_efs_costs <- NeuroblastomaPSM::calculate_efs_costs(
+#'  l_params = params,
 #'  GD2_cycle_days = 35,
 #'  TT_cycle_days = 30
 #' )
@@ -219,37 +221,37 @@ calculate_treatment_costs <- function(
 #' l_GD2_efs_costs
 #' }
 calculate_efs_costs <- function(
-    params,
+    l_params,
     GD2_cycle_days,
     TT_cycle_days) {
   # Calculate days off treatments
-  GD2_off_dose_days <- GD2_cycle_days - (params$GD2_dose_days +
-                                           params$TT_dose_days)
-  TT_off_dose_days <- TT_cycle_days - params$TT_dose_days
+  GD2_off_dose_days <- GD2_cycle_days - (l_params$GD2_dose_days +
+                                           l_params$TT_dose_days)
+  TT_off_dose_days <- TT_cycle_days - l_params$TT_dose_days
   # Estimate GD2 AE costs per cycle length
-  GD2_AE_costs_cycle <- calculate_ae_costs(params = params)
-  GD2_AE_costs_day <- GD2_AE_costs_cycle / (params$cycle_length * 365)
+  GD2_AE_costs_cycle <- calculate_ae_costs(l_params = l_params)
+  GD2_AE_costs_day <- GD2_AE_costs_cycle / (l_params$cycle_length * 365)
 
   # Get model cycle time points
   time_points <- seq(
     from = 0,
-    to = params$time_horizon,
-    by = params$cycle_length
+    to = l_params$time_horizon,
+    by = l_params$cycle_length
   )
 
   # Calculate body surface area
-  surface_area <- (params$body_weight * 0.035) + 0.1
+  surface_area <- (l_params$body_weight * 0.035) + 0.1
 
   # Dosage per child per cycle in mg
   v_GD2_dosage_cycle <- rep(# mg GD2/day x bsa x days
-    x = (ceiling((100 * surface_area) / params$GD2_unit_mg) *
-           params$GD2_unit_price),
-    times = params$GD2_dose_days
+    x = (ceiling((100 * surface_area) / l_params$GD2_unit_mg) *
+           l_params$GD2_unit_price),
+    times = l_params$GD2_dose_days
   )
   v_TT_dosage_cycle  <- rep(# mg  TT/day x bsa x days
-    x = (ceiling((160 * surface_area) / params$TT_unit_mg) *
-           params$TT_unit_price),
-    times = params$TT_dose_days
+    x = (ceiling((160 * surface_area) / l_params$TT_unit_mg) *
+           l_params$TT_unit_price),
+    times = l_params$TT_dose_days
   )
   v_GD2_cool_off      <- rep(
     x = 0,
@@ -368,33 +370,33 @@ calculate_efs_costs <- function(
 #' )
 #'
 #' # Calculate AE costs
-#' GD2_ae_costs <- calculate_ae_costs(params = params)
+#' GD2_ae_costs <- NeuroblastomaPSM::calculate_ae_costs(l_params = params)
 #'
 #' GD2_ae_costs
 #' }
-calculate_ae_costs <- function(params) {
+calculate_ae_costs <- function(l_params) {
   # Get model cycle time points
   time_points <- seq(
     from = 0,
-    to = params$time_horizon,
-    by = params$cycle_length
+    to = l_params$time_horizon,
+    by = l_params$cycle_length
   )
 
   # Combine GD2 AE probs and costs
-  AE_data <- params[
+  AE_data <- l_params[
     grepl(
-      pattern = paste0(params$GD2_aEvents_names, collapse = "|"),
-      x = names(params)
+      pattern = paste0(l_params$GD2_aEvents_names, collapse = "|"),
+      x = names(l_params)
     )
   ]
-  GD2_aEvents_probs <- AE_data[paste0("prob_", params$GD2_aEvents_names)] |>
+  GD2_aEvents_probs <- AE_data[paste0("prob_", l_params$GD2_aEvents_names)] |>
     unlist()
-  GD2_aEvents_costs <- AE_data[paste0("cost_", params$GD2_aEvents_names)] |>
+  GD2_aEvents_costs <- AE_data[paste0("cost_", l_params$GD2_aEvents_names)] |>
     unlist()
 
   # Re-scaling annual probability
   GD2_aEvents_rates <- - log(1 - GD2_aEvents_probs)
-  reScaled_rates    <- GD2_aEvents_rates * params$cycle_length
+  reScaled_rates    <- GD2_aEvents_rates * l_params$cycle_length
   reScaled_probs    <-  1 - exp(- reScaled_rates)
 
   # Calculating AE event cost per model cycle
@@ -423,8 +425,8 @@ calculate_ae_costs <- function(params) {
 #' )
 #'
 #' # Calculate treatment costs
-#' pps_costs <- calculate_pps_costs(
-#'  params = params,
+#' pps_costs <- NeuroblastomaPSM::calculate_pps_costs(
+#'  l_params = params,
 #'  Temo_cycle_days = 21,
 #'  Iri_cycle_days = 21
 #' )
@@ -432,33 +434,33 @@ calculate_ae_costs <- function(params) {
 #' pps_costs
 #' }
 calculate_pps_costs <- function(
-    params,
+    l_params,
     Temo_cycle_days,
     Iri_cycle_days) {
   # Calculate days off treatments
-  Temo_off_dose_days <- Temo_cycle_days - params$Temo_dose_days
-  Iri_off_dose_days <- Iri_cycle_days - params$Iri_dose_days
+  Temo_off_dose_days <- Temo_cycle_days - l_params$Temo_dose_days
+  Iri_off_dose_days <- Iri_cycle_days - l_params$Iri_dose_days
 
   # Get model cycle time points
   time_points <- seq(
     from = 0,
-    to = params$time_horizon,
-    by = params$cycle_length
+    to = l_params$time_horizon,
+    by = l_params$cycle_length
   )
 
   # Calculate body surface area
-  surface_area <- (params$body_weight * 0.035) + 0.1
+  surface_area <- (l_params$body_weight * 0.035) + 0.1
 
   # Dosage per child per cycle in mg
   v_Temo_dosage_cycle <- rep(# mg Temo/day x bsa x days
-    x = (ceiling((100 * surface_area) / params$Temo_unit_mg) *
-           params$Temo_unit_price),
-    times = params$Temo_dose_days
+    x = (ceiling((100 * surface_area) / l_params$Temo_unit_mg) *
+           l_params$Temo_unit_price),
+    times = l_params$Temo_dose_days
   )
   v_Iri_dosage_cycle  <- rep(# mg  Iri/day x bsa x days
-    x = (ceiling((50 * surface_area) / params$Iri_unit_mg) *
-           params$Iri_unit_price),
-    times = params$Iri_dose_days
+    x = (ceiling((50 * surface_area) / l_params$Iri_unit_mg) *
+           l_params$Iri_unit_price),
+    times = l_params$Iri_dose_days
   )
   v_Temo_cool_off      <- rep(
     x = 0,
@@ -474,7 +476,7 @@ calculate_pps_costs <- function(
       v_Temo_cool_off
     ),
     length.out = 1 +              # start from day zero
-      (params$time_horizon * 365) # continue cycles to death or time horizon
+      (l_params$time_horizon * 365) # continue cycles to death or time horizon
   )
   v_Iri_costs   <- rep(
     x = c(
@@ -482,11 +484,11 @@ calculate_pps_costs <- function(
       v_Iri_cool_off
     ),
     length.out = 1 +              # start from day zero
-      (params$time_horizon * 365) # continue cycles to death or time horizon
+      (l_params$time_horizon * 365) # continue cycles to death or time horizon
   )
   m_annual_costs <- cbind(
     v_pps_costs = v_Temo_costs + v_Iri_costs,
-    days_in_time_horizon = (0:(365 * params$time_horizon)) / 365
+    days_in_time_horizon = (0:(365 * l_params$time_horizon)) / 365
   )
 
   # Summing costs to the values specified by 'time_points'

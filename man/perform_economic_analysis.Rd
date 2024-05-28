@@ -4,14 +4,14 @@
 \alias{perform_economic_analysis}
 \title{Perform Economic Analysis}
 \usage{
-perform_economic_analysis(df_markov_trace, params)
+perform_economic_analysis(df_markov_trace, l_params)
 }
 \arguments{
 \item{df_markov_trace}{A data frame containing the Markov trace with columns
 for time, treatment, and state occupancies (`EFS`, `PPS`, `D`).}
 
-\item{params}{A list of model parameters including the list of parameters in
-the list \code{\link{l_psm_parameters}} in addition to:
+\item{l_params}{A list of model parameters including the list of parameters
+in the list \code{\link{l_psm_parameters}} in addition to:
 \itemize{
   \item \code{time_horizon}: The time horizon for the model in years.
   \item \code{cycle_length}: The length of a model cycle measured in years.
@@ -45,7 +45,7 @@ params <- c(
 # Predict cumulative survival
 df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
   models_fit = models_fit,
-  params = params
+  l_params = params
 )
 
 # Generate Markov trace
@@ -56,7 +56,7 @@ df_markov_trace <- NeuroblastomaPSM::calculate_markov_trace(
 # Perform Economic Analysis
 v_psm_results <- NeuroblastomaPSM::perform_economic_analysis(
   df_markov_trace = df_markov_trace,
-  params = params
+  l_params = params
 )
 
 v_psm_results

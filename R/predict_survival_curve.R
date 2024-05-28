@@ -14,21 +14,26 @@
 #'
 #' @return A data frame with survival probabilities at specified time points,
 #'         labeled with treatment and end point information.
+#'
+#' @export
+#'
 #' @examples
 #' \dontrun{
-#' fit <- survival::survfit(
-#'     survival::Surv(eventtime, event) ~ 1,
-#'     data = IPD_data[IPD_data$trt_cd == "TT",]
-#' )
+#' # Load the fitted Gompertz model parameters
+#' models_fit <- NeuroblastomaPSM::parametric_models[[4]]
 #'
-#' survival_curve <- predict_survival_curve(
-#'     surv_mod = fit,
+#' df_survival_curve <- NeuroblastomaPSM::predict_survival_curve(
+#'     surv_mod = models_fit,
 #'     treatment_name = "Isotretinoin",
 #'     end_point = "OS",
 #'     time_points = seq(0, 10, 1/12)
 #' )
+#'
+#' rbind(
+#'   head(df_survival_curve, n = 5),
+#'   tail(df_survival_curve, n = 5)
+#' )
 #' }
-#' @export
 predict_survival_curve <- function(
     surv_mod,
     treatment_name,

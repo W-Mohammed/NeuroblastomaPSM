@@ -6,9 +6,12 @@
 #' @param df_survival_curves_long A data frame containing the predicted
 #' cumulative survival curves in long format with columns for time, treatment,
 #' end_point, and survival probabilities.
+#'
 #' @return A data frame in wide format with columns for time, treatment, and
 #' states occupancy (`EFS`, `PPS`, `D`).
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Load the fitted Gompertz model parameters
@@ -26,7 +29,7 @@
 #' # Predict cumulative survival
 #' df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
 #'   models_fit = models_fit,
-#'   params = params
+#'   l_params = params
 #' )
 #'
 #' # Generate Markov trace

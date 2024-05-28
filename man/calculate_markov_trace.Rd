@@ -36,7 +36,7 @@ params <- c(
 # Predict cumulative survival
 df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
   models_fit = models_fit,
-  params = params
+  l_params = params
 )
 
 # Generate Markov trace

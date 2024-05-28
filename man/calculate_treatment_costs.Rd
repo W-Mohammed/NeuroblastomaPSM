@@ -5,7 +5,7 @@
 \title{Calculate Treatment Costs}
 \usage{
 calculate_treatment_costs(
-  params,
+  l_params,
   GD2_cycle_days = 35,
   TT_cycle_days = 30,
   Temo_cycle_days = 21,
@@ -13,8 +13,8 @@ calculate_treatment_costs(
 )
 }
 \arguments{
-\item{params}{A list of model parameters including the list of parameters in
-the list \code{\link{l_psm_parameters}} in addition to:
+\item{l_params}{A list of model parameters including the list of parameters
+in the list \code{\link{l_psm_parameters}} in addition to:
 \itemize{
   \item \code{time_horizon}: The time horizon for the model in years.
   \item \code{cycle_length}: The length of a model cycle measured in years.
@@ -55,7 +55,9 @@ params <- c(
 )
 
 # Calculate treatment costs
-l_treatment_costs <- calculate_treatment_costs(params = params)
+l_treatment_costs <- NeuroblastomaPSM::calculate_treatment_costs(
+   l_params = params
+)
 
 View(l_treatment_costs)
 }

@@ -28,6 +28,11 @@
 #'     discounted_output = FALSE,
 #'     wtp = 30000
 #' )
+#'
+#' rbind(
+#'   head(df_owsa_results, n = 5),
+#'   tail(df_owsa_results, n = 5)
+#' )
 #' }
 run_owsa <- function(
     model_func = NeuroblastomaPSM::run_psm,
@@ -47,7 +52,7 @@ run_owsa <- function(
     wtp = 30000) {
 
   # Prepare parameters data.frame:
-  v_ci_bounds_names <- names(l_dsa_parameters[[1]])
+  v_ci_bounds_names <- names(l_dsa_params[[1]])
 
   # Deterministic model run:
   v_deterministic_run <- do.call(
@@ -74,23 +79,23 @@ run_owsa <- function(
 
           # Extract results:
           data.frame(
-            "intervention" = c("Isotretinoin", "Dinutuximab β"),
+            "intervention" = c("TT", "GD2"),
             "parameter" = owsa_parameter,
             "ci_bound_label" = ci_bound_name,
             "ci_bound_value" = l_dsa_params[[owsa_parameter]][[ci_bound_name]],
             "effects" = if(!discounted_output) {
-              c(v_run_results[["qalys_Isotretinoin"]],
-                v_run_results[["qalys_Dinutuximab_β"]])
+              c(v_run_results[["qalys_TT"]],
+                v_run_results[["qalys_GD2"]])
             } else {
-              c(v_run_results[["Dqalys_Isotretinoin"]],
-                v_run_results[["Dqalys_Dinutuximab_β"]])
+              c(v_run_results[["Dqalys_TT"]],
+                v_run_results[["Dqalys_GD2"]])
             },
             "costs" = if(!discounted_output) {
-              c(v_run_results[["costs_Isotretinoin"]],
-                v_run_results[["costs_Dinutuximab_β"]])
+              c(v_run_results[["costs_TT"]],
+                v_run_results[["costs_GD2"]])
             } else {
-              c(v_run_results[["Dcosts_Isotretinoin"]],
-                v_run_results[["Dcosts_Dinutuximab_β"]])
+              c(v_run_results[["Dcosts_TT"]],
+                v_run_results[["Dcosts_GD2"]])
             }
           )
         }
@@ -107,29 +112,29 @@ run_owsa <- function(
     )
 
   # Process OWSA results:
-  parameter <- NULL
+  intervention <- NULL
   df_GD2_owsa_results <- base::subset(
     x = df_owsa_results,
-    subset = (intervention == "Dinutuximab β")
+    subset = (intervention == "GD2")
   )
   df_TT_owsa_results <- base::subset(
     x = df_owsa_results,
-    subset = (intervention == "Isotretinoin")
+    subset = (intervention == "TT")
   )
   df_owsa_cea_results <- base::subset(
     x = df_owsa_results,
-    subset = (intervention == "Isotretinoin"),
+    subset = (intervention == "TT"),
     select = names(df_owsa_results)[
       names(df_owsa_results) != c("intervention", "effects", "costs")]
   )
   # Estimate the required output:
-  df_owsa_cea_results[["Isotretinoin Costs"]] <-
+  df_owsa_cea_results[["TT Costs"]] <-
     df_TT_owsa_results[["costs"]]
-  df_owsa_cea_results[["Isotretinoin QALYs"]] <-
+  df_owsa_cea_results[["TT QALYs"]] <-
     df_TT_owsa_results[["effects"]]
-  df_owsa_cea_results[["Dinutuximab β Costs"]] <-
+  df_owsa_cea_results[["GD2 Costs"]] <-
     df_GD2_owsa_results[["costs"]]
-  df_owsa_cea_results[["Dinutuximab β QALYs"]] <-
+  df_owsa_cea_results[["GD2 QALYs"]] <-
     df_GD2_owsa_results[["effects"]]
   df_owsa_cea_results[["NMB"]] <-
     ((df_TT_owsa_results["effects"] * wtp - df_TT_owsa_results["costs"]) -
@@ -230,34 +235,9 @@ run_owsa <- function(
 #'    plot_bars_width = 0.95,
 #'    plot_colors = c("Lower" = "orange", "Upper" = "skyblue")
 #' )
-#' owsa_NMB_plot <- NeuroblastomaPSM::plot_owsa(
-#'    df_owsa = NeuroblastomaPSM::run_owsa(),
-#'    model_func = NeuroblastomaPSM::run_psm,
-#'    model_func_args = list(
-#'        "models_fit" = NeuroblastomaPSM::parametric_models,
-#'        "l_params" = c(
-#'            time_horizon = 10,
-#'            cycle_length = 1/12,
-#'            disc_rate_costs = 0.035,
-#'            disc_rate_qalys = 0.015,
-#'            NeuroblastomaPSM::l_psm_parameters
-#'          )
-#'        ),
-#'    v_dsa_params = names(NeuroblastomaPSM::l_dsa_parameters),
-#'    l_dsa_params = NeuroblastomaPSM::l_dsa_parameters,
-#'    discounted_output = FALSE,
-#'    cea_metric = "NMB",
-#'    wtp = 30000,
-#'    parameters_labels = NULL,
-#'    show_labels_in_caption = FALSE,
-#'    plot_title = "One-Way Sensitivity Analysis - Tornado plot",
-#'    plot_subtitle = NULL,
-#'    x_axis_label = "Incremental Net Benefit",
-#'    currency_symbol = "$",
-#'    show_basecase_value_label = TRUE,
-#'    plot_bars_width = 0.95,
-#'    plot_colors = c("Lower" = "orange", "Upper" = "skyblue")
-#' )
+#'
+#' owsa_NMB_plot
+#'
 #' owsa_DQALYs_plot <- NeuroblastomaPSM::plot_owsa(
 #'    df_owsa = NeuroblastomaPSM::run_owsa(),
 #'    model_func = NeuroblastomaPSM::run_psm,
@@ -286,6 +266,9 @@ run_owsa <- function(
 #'    plot_bars_width = 0.95,
 #'    plot_colors = c("Lower" = "orange", "Upper" = "skyblue")
 #' )
+#'
+#' owsa_DQALYs_plot
+#'
 #' owsa_Dcosts_plot <- NeuroblastomaPSM::plot_owsa(
 #'    df_owsa = NeuroblastomaPSM::run_owsa(),
 #'    model_func = NeuroblastomaPSM::run_psm,
@@ -314,6 +297,9 @@ run_owsa <- function(
 #'    plot_bars_width = 0.95,
 #'    plot_colors = c("Lower" = "orange", "Upper" = "skyblue")
 #' )
+#'
+#' owsa_Dcosts_plot
+#'
 #' owsa_ICER_plot <- NeuroblastomaPSM::plot_owsa(
 #'    df_owsa = NeuroblastomaPSM::run_owsa(),
 #'    model_func = NeuroblastomaPSM::run_psm,
@@ -342,6 +328,8 @@ run_owsa <- function(
 #'    plot_bars_width = 0.95,
 #'    plot_colors = c("Lower" = "orange", "Upper" = "skyblue")
 #' )
+#'
+#' owsa_ICER_plot
 #' }
 plot_owsa <- function(
     df_owsa = NeuroblastomaPSM::run_owsa(),
@@ -379,20 +367,20 @@ plot_owsa <- function(
   )
 
   df_base_case <- data.frame(
-    "intervention" = c("Isotretinoin", "Dinutuximab β"),
+    "intervention" = c("TT", "GD2"),
     "effects" = if(!discounted_output) {
-      c(v_base_case_run_results[["qalys_Isotretinoin"]],
-        v_base_case_run_results[["qalys_Dinutuximab_β"]])
+      c(v_base_case_run_results[["qalys_TT"]],
+        v_base_case_run_results[["qalys_GD2"]])
     } else {
-      c(v_base_case_run_results[["Dqalys_Isotretinoin"]],
-        v_base_case_run_results[["Dqalys_Dinutuximab_β"]])
+      c(v_base_case_run_results[["Dqalys_TT"]],
+        v_base_case_run_results[["Dqalys_GD2"]])
     },
     "costs" = if(!discounted_output) {
-      c(v_base_case_run_results[["costs_Isotretinoin"]],
-        v_base_case_run_results[["costs_Dinutuximab_β"]])
+      c(v_base_case_run_results[["costs_TT"]],
+        v_base_case_run_results[["costs_GD2"]])
     } else {
-      c(v_base_case_run_results[["Dcosts_Isotretinoin"]],
-        v_base_case_run_results[["Dcosts_Dinutuximab_β"]])
+      c(v_base_case_run_results[["Dcosts_TT"]],
+        v_base_case_run_results[["Dcosts_GD2"]])
     }
   )
 

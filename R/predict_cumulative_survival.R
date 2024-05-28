@@ -25,7 +25,7 @@
 #' # Predict cumulative survival
 #' df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
 #'   models_fit = models_fit,
-#'   params = params
+#'   l_params = params
 #' )
 #'
 #' rbind(
@@ -35,11 +35,11 @@
 #' }
 predict_cumulative_survival <- function(
     models_fit,
-    params) {
+    l_params) {
   time_points <- seq(
     from = 0,
-    to = params$time_horizon,
-    by = params$cycle_length
+    to = l_params$time_horizon,
+    by = l_params$cycle_length
   )
 
   df_survival_curves_long <- lapply(

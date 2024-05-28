@@ -4,11 +4,11 @@
 \alias{calculate_ae_costs}
 \title{Calculate Adverse Effects (AE) Costs}
 \usage{
-calculate_ae_costs(params)
+calculate_ae_costs(l_params)
 }
 \arguments{
-\item{params}{A list of model parameters including the list of parameters in
-the list \code{\link{l_psm_parameters}} in addition to:
+\item{l_params}{A list of model parameters including the list of parameters
+in the list \code{\link{l_psm_parameters}} in addition to:
 \itemize{
   \item \code{time_horizon}: The time horizon for the model in years.
   \item \code{cycle_length}: The length of a model cycle measured in years.
@@ -37,7 +37,7 @@ params <- c(
 )
 
 # Calculate AE costs
-GD2_ae_costs <- calculate_ae_costs(params = params)
+GD2_ae_costs <- NeuroblastomaPSM::calculate_ae_costs(l_params = params)
 
 GD2_ae_costs
 }

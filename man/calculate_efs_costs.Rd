@@ -4,11 +4,11 @@
 \alias{calculate_efs_costs}
 \title{Calculate Event Free Survival (EFS) Costs}
 \usage{
-calculate_efs_costs(params, GD2_cycle_days, TT_cycle_days)
+calculate_efs_costs(l_params, GD2_cycle_days, TT_cycle_days)
 }
 \arguments{
-\item{params}{A list of model parameters including the list of parameters in
-the list \code{\link{l_psm_parameters}} in addition to:
+\item{l_params}{A list of model parameters including the list of parameters
+in the list \code{\link{l_psm_parameters}} in addition to:
 \itemize{
   \item \code{time_horizon}: The time horizon for the model in years.
   \item \code{cycle_length}: The length of a model cycle measured in years.
@@ -42,8 +42,8 @@ params <- c(
 )
 
 # Calculate AE treatment costs
-l_GD2_efs_costs <- calculate_efs_costs(
- params = params,
+l_GD2_efs_costs <- NeuroblastomaPSM::calculate_efs_costs(
+ l_params = params,
  GD2_cycle_days = 35,
  TT_cycle_days = 30
 )
