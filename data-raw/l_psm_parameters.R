@@ -3,7 +3,7 @@
 l_psm_parameters <- list(
   body_weight = 15,
   GD2_unit_mg = 20,
-  GD2_dose_days = 10,
+  GD2_dose_days = 5,
   GD2_unit_price = 8790.26,
   TT_unit_mg = 10,
   TT_dose_days = 14,
