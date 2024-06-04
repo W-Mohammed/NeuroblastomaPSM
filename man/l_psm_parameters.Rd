@@ -9,7 +9,7 @@ A list with the following components:
 \describe{
   \item{body_weight}{Body weight in kilograms, 15.}
   \item{GD2_unit_mg}{Unit dose of Dinutuximab β (GD2) in milligrams, 20.}
-  \item{GD2_dose_days}{Number of days on Dinutuximab β per cycle, 10.}
+  \item{GD2_dose_days}{Number of days on Dinutuximab β per cycle, 5.}
   \item{GD2_unit_price}{Unit price of Dinutuximab β, 8790.26.}
   \item{TT_unit_mg}{Unit dose of Isotretinoin (TT) in milligrams, 10.}
   \item{TT_dose_days}{Number of days for Isotretinoin dosing, 14.}
