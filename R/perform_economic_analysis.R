@@ -215,7 +215,7 @@ calculate_treatment_costs <- function(
 #' l_GD2_efs_costs <- NeuroblastomaPSM::calculate_efs_costs(
 #'  l_params = params,
 #'  GD2_cycle_days = 35,
-#'  TT_cycle_days = 30
+#'  TT_cycle_days = 28
 #' )
 #'
 #' l_GD2_efs_costs
@@ -262,6 +262,10 @@ calculate_efs_costs <- function(
     times = TT_off_dose_days
   )
   v_annual_GD2_costs  <- c(
+
+    v_TT_dosage_cycle      , # adding possible AE costs
+    v_TT_cool_off         ,  # adding possible AE costs
+
     rep(
       x = c(
         v_GD2_dosage_cycle + GD2_AE_costs_day, # adding possible AE costs
@@ -269,9 +273,8 @@ calculate_efs_costs <- function(
         v_GD2_cool_off     + GD2_AE_costs_day  # adding possible AE costs
       ),
       times = 5
-    ),
-    v_TT_dosage_cycle      + GD2_AE_costs_day, # adding possible AE costs
-    v_GD2_cool_off         + GD2_AE_costs_day  # adding possible AE costs
+    )
+
   )
   v_annual_TT_costs   <- c(
     rep(
@@ -279,9 +282,8 @@ calculate_efs_costs <- function(
         v_TT_dosage_cycle,
         v_TT_cool_off
       ),
-      times = 5
-    ),
-    v_TT_dosage_cycle
+      times = 6
+    )
   )
   m_annual_costs <- cbind(
     v_annual_GD2_costs  = c(
