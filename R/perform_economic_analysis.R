@@ -244,7 +244,7 @@ calculate_efs_costs <- function(
 
   # Dosage per child per cycle in mg
   v_GD2_dosage_cycle <- rep(# mg GD2/day x bsa x days
-    x = (ceiling((100 * surface_area) / l_params$GD2_unit_mg) *
+    x = (ceiling((20 * surface_area) / l_params$GD2_unit_mg) *
            l_params$GD2_unit_price),
     times = l_params$GD2_dose_days
   )
