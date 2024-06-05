@@ -20,7 +20,7 @@ in the list \code{\link{l_psm_parameters}} in addition to:
 value is `35` days.}
 
 \item{TT_cycle_days}{The number of days in a TT treatment cycle. Default
-value is `30` days.}
+value is `28` days.}
 }
 \value{
 A list containing `Dinutuximab β` (GD2) and `Isotretinoin` (TT) costs
@@ -45,7 +45,7 @@ params <- c(
 l_GD2_efs_costs <- NeuroblastomaPSM::calculate_efs_costs(
  l_params = params,
  GD2_cycle_days = 35,
- TT_cycle_days = 30
+ TT_cycle_days = 28
 )
 
 l_GD2_efs_costs
