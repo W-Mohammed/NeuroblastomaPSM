@@ -268,7 +268,8 @@ calculate_efs_costs <- function(
 
     rep(
       x = c(
-        v_GD2_dosage_cycle + GD2_AE_costs_day, # adding possible AE costs
+        v_GD2_dosage_cycle + GD2_AE_costs_day # adding possible AE costs and cost of hospitalization
+                           + l_params$cost_hospitalisation,
         v_TT_dosage_cycle  + GD2_AE_costs_day, # adding possible AE costs
         v_GD2_cool_off     + GD2_AE_costs_day  # adding possible AE costs
       ),
