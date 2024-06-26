@@ -7,3 +7,7 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^\.git$
+^.git$
+^.git\$
+^data-raw$

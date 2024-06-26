@@ -37,4 +37,5 @@ Imports:
     hesim,
     survHE,
     survival,
-    survminer
+    survminer,
+    truncnorm

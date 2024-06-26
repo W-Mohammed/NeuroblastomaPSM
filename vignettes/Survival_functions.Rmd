@@ -371,7 +371,3 @@ parametric_models <- lapply(
 )
 ```
 
-## Probabilistic Sensitivity Analysis (PSA):
-
-TODO
-
