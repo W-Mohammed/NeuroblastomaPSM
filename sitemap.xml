@@ -25,9 +25,63 @@
     <loc>https://w-mohammed.github.io/NeuroblastomaPSM/index.html</loc>
   </url>
   <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/calculate_ae_costs.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/calculate_efs_costs.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/calculate_markov_trace.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/calculate_pps_costs.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/calculate_treatment_costs.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/estimate_se.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/get_sampling_params.html</loc>
+  </url>
+  <url>
     <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/l_dsa_parameters.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/l_psa_parameters.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/l_psm_parameters.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/l_sensitivity_parameters.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/perform_economic_analysis.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/plot_owsa.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/predict_cumulative_survival.html</loc>
+  </url>
+  <url>
     <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/predict_survival_curve.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/run_owsa.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/run_psa.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/run_psm.html</loc>
+  </url>
+  <url>
+    <loc>https://w-mohammed.github.io/NeuroblastomaPSM/reference/sample_psa_data.html</loc>
   </url>
 </urlset>
