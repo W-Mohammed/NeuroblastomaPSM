@@ -40,6 +40,50 @@ A list with the following components:
       }
     }
   }
+  \item{prob_anemia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rbeta".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{alpha}{Alpha parameter of the beta distribution.}
+          \item{beta}{Beta parameter of the beta distribution.}
+        }
+      }
+    }
+  }
+  \item{prob_leukopenia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rbeta".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{alpha}{Alpha parameter of the beta distribution.}
+          \item{beta}{Beta parameter of the beta distribution.}
+        }
+      }
+    }
+  }
+  \item{prob_neutropenia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rbeta".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{alpha}{Alpha parameter of the beta distribution.}
+          \item{beta}{Beta parameter of the beta distribution.}
+        }
+      }
+    }
+  }
+  \item{prob_thrombocytopenia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rbeta".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{alpha}{Alpha parameter of the beta distribution.}
+          \item{beta}{Beta parameter of the beta distribution.}
+        }
+      }
+    }
+  }
   \item{prob_fever}{A list with the following elements:
     \describe{
       \item{dist_func}{Distribution function, here "rbeta".}
@@ -51,7 +95,40 @@ A list with the following components:
       }
     }
   }
+  \item{prob_urticaria}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rbeta".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{alpha}{Alpha parameter of the beta distribution.}
+          \item{beta}{Beta parameter of the beta distribution.}
+        }
+      }
+    }
+  }
+  \item{prob_immunotherapy_related_pain}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rbeta".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{alpha}{Alpha parameter of the beta distribution.}
+          \item{beta}{Beta parameter of the beta distribution.}
+        }
+      }
+    }
+  }
   \item{prob_diarrhea}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rbeta".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{alpha}{Alpha parameter of the beta distribution.}
+          \item{beta}{Beta parameter of the beta distribution.}
+        }
+      }
+    }
+  }
+  \item{prob_hypotension}{A list with the following elements:
     \describe{
       \item{dist_func}{Distribution function, here "rbeta".}
       \item{dist_params}{A list of parameters for the distribution:
@@ -106,6 +183,50 @@ A list with the following components:
       }
     }
   }
+  \item{cost_anemia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rgamma".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{shape}{Shape parameter of the gamma distribution.}
+          \item{scale}{Scale parameter of the gamma distribution.}
+        }
+      }
+    }
+  }
+  \item{cost_leukopenia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rgamma".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{shape}{Shape parameter of the gamma distribution.}
+          \item{scale}{Scale parameter of the gamma distribution.}
+        }
+      }
+    }
+  }
+  \item{cost_neutropenia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rgamma".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{shape}{Shape parameter of the gamma distribution.}
+          \item{scale}{Scale parameter of the gamma distribution.}
+        }
+      }
+    }
+  }
+  \item{cost_thrombocytopenia}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rgamma".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{shape}{Shape parameter of the gamma distribution.}
+          \item{scale}{Scale parameter of the gamma distribution.}
+        }
+      }
+    }
+  }
   \item{cost_fever}{A list with the following elements:
     \describe{
       \item{dist_func}{Distribution function, here "rgamma".}
@@ -117,7 +238,40 @@ A list with the following components:
       }
     }
   }
+  \item{cost_urticaria}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rgamma".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{shape}{Shape parameter of the gamma distribution.}
+          \item{scale}{Scale parameter of the gamma distribution.}
+        }
+      }
+    }
+  }
+  \item{cost_immunotherapy_related_pain}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rgamma".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{shape}{Shape parameter of the gamma distribution.}
+          \item{scale}{Scale parameter of the gamma distribution.}
+        }
+      }
+    }
+  }
   \item{cost_diarrhea}{A list with the following elements:
+    \describe{
+      \item{dist_func}{Distribution function, here "rgamma".}
+      \item{dist_params}{A list of parameters for the distribution:
+        \describe{
+          \item{shape}{Shape parameter of the gamma distribution.}
+          \item{scale}{Scale parameter of the gamma distribution.}
+        }
+      }
+    }
+  }
+  \item{cost_hypotension}{A list with the following elements:
     \describe{
       \item{dist_func}{Distribution function, here "rgamma".}
       \item{dist_params}{A list of parameters for the distribution:

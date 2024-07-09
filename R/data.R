@@ -1,3 +1,18 @@
+#' Jordan Life Table 2019
+#'
+#' This dataset provides mortality rates for different age groups, split by sex. The data includes mortality rates for both sexes combined, as well as separately for males and females.
+#'
+#' @format A data frame with 101 rows and 4 variables:
+#' \describe{
+#'   \item{Age Group}{Numeric vector representing the age groups from 0 to 100.}
+#'   \item{Both sexes}{Numeric vector representing the mortality rates for both
+#'   sexes combined.}
+#'   \item{Male}{Numeric vector representing the mortality rates for males.}
+#'   \item{Female}{Numeric vector representing the mortality rates for females.}
+#' }
+#' @source {Khader to add the reference!}
+"df_lifeTable_Jordan"
+
 #' Partitioned Survival Model (PSM) Parameters
 #'
 #' This list contains the Partitioned Survival Model (PSM) parameters including
