@@ -414,7 +414,7 @@ interpolate_survival_curve <- function(
 
   # Fit interpolation model: log cumulative hazard vs. age using splines or gam
   cum_hazard_model <- switch (interpolation_model,
-    spline = lm(
+    spline = stats::lm(
       formula = log(cum_hazard) ~ splines::ns(x = age, df = 4),
       data = df_cum_hazard
     ),
@@ -422,7 +422,7 @@ interpolate_survival_curve <- function(
   )
 
   # Predict hazard rate using the fitted model coefficients
-  v_fitted_log_cum_hazard <- predict(
+  v_fitted_log_cum_hazard <- stats::predict(
     object = cum_hazard_model,
     newdata = data.frame(age = target_ages)
   )
