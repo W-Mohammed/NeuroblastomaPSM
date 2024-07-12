@@ -34,7 +34,7 @@ models_fit <- NeuroblastomaPSM::parametric_models
 
 # Define model parameters
 params <- c(
-  time_horizon = 10,
+  time_horizon = 15,
   cycle_length = 1/12,
   disc_rate_costs = 0.035,
   disc_rate_qalys = 0.015,

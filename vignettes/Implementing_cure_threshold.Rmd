@@ -19,21 +19,20 @@ hook_foldable = function(type) {
   function(x, options) {
     res = hooks[[type]](x, options)
     
-    # By default, set folding to FALSE unless explicitly set to TRUE
     if (!isTRUE(options[[paste0("fold.", type)]])) {
+      # By default, set folding to FALSE unless explicitly set to TRUE
       
-    return(res) 
+      return(res) 
     } else {
       # Use the chunk label as the summary if it exists, otherwise fallback to type
-      summary_title = options$label
+      summary_title <- options$fold.title
+      type <- ifelse(type == "source", "SourceCode", type)
       if (is.null(summary_title)) {
-        summary_title = type
-      }
-      if (grepl(pattern = "unnamed", x = summary_title)) {
-        summary_title = type
+        summary_title <- type
       } else {
-        summary_title = paste0(summary_title, " - ", type)
+        summary_title <- paste0(summary_title, " - ", type)
       }
+      
       return(
         paste0(
           "<details><summary>", summary_title, "</summary>\n\n",
@@ -44,6 +43,7 @@ hook_foldable = function(type) {
     }
   }
 }
+
 knitr::knit_hooks$set(
   output = hook_foldable("output"),
   plot = hook_foldable("plot"),
