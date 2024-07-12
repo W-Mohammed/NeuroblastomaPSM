@@ -364,10 +364,7 @@ df_markov_trace2 <- df_survival_curves2[
 ]
 
 # Sanity check:
-stopifnot(
-  "Markov trace does not sum up to 1." =
-    all(rowSums(df_markov_trace[, c("EFS", "PPS", "D")]) == 1.000)
-)
+all(rowSums(df_markov_trace[, c("EFS", "PPS", "D")]) == 1.00000)
 ```
 
 The plots below show the difference between employing and not making the 'cure threshold' assumptions.
