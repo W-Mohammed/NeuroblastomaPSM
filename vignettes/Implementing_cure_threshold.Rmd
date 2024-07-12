@@ -62,11 +62,11 @@ This vignette describes how the PSM:
 
 ## Ajusting general population hazard rates:
 
-General population hazard rates can be found in Life Tables. The life table of Jordan is shipped with the `NeuroblastomaPSM` package, and is used by default in the PSM model. The following steps describe the adjustment of the baseline mortality as it is employed in the `NeuroblastomaPSM` package.
+General population hazard rates can be found in Life Tables. The life table of Jordan is shipped with the `NeuroblastomaPSM` package, and is used by default in the PSM model. The following steps describe how the `NeuroblastomaPSM` package adjusts the baseline mortality.
 
 ### Generating the general population survival curve:
 
-The survival curve represents the probability of surviving up to the corresponding age or time point, starting from a cohort with an initial size of 1 (or 100% survival). The `get_lifeTable_survival_curve` function calculates the survival curve from a given vector of mortality probabilities (the values recorded in any life table).
+The survival curve represents the probability of surviving up to the corresponding age or time point. The `get_lifeTable_survival_curve` function calculates the survival curve from a given vector of mortality probabilities (the values recorded in any life table).
 
 The survival curve ($S(t)$) is calculated as the cumulative product of $1 -$ mortality probability for each time period.
 
@@ -239,7 +239,7 @@ legend(
 
 ## Employ the 'cure threshold':
 
-The 'cure threshold' in this PSM is employed via the `calculate_markov_trace` function. Therefore, part of the this function code is shown below to demonstrate how the 'cure threshold' assumptions are applied.
+The 'cure threshold' assumptions in this PSM are implemented in the `calculate_markov_trace` function. Hence, part of the this function code is shown below to demonstrate how the 'cure threshold' assumptions are applied.
 
 ```{r cure_threshold, fig.retina=100, fig.width=7, fig.height=5, fig.retina=2}
 # Define age range and survival probabilities
