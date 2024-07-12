@@ -1,3 +1,37 @@
+#' Reconstructed Individual Patient Data
+#'
+#' This dataset contains reconstructed individual patient data (IPD) from
+#' published KM survival curve. The dataset includes information on treatment
+#' type, treatment code, survival curve type, event times, and event occurrences
+#' for each patient.
+#'
+#' @format A data frame with 624 observations on the following 5 variables:
+#' \describe{
+#'   \item{trt}{Character vector indicating the treatment received by each
+#'   patient. Possible values are \code{"Isotretinoin"} and
+#'   \code{"Dinutuximab β"}.}
+#'   \item{trt_cd}{Character vector representing the treatment code.
+#'   \code{"TT"} for \code{Isotretinoin} and \code{"GD2"} for
+#'   \code{Dinutuximab β}.}
+#'   \item{curve}{Character vector indicating the type of survival curve.
+#'   Possible values are \code{"OS"} (Overall Survival) and \code{"EFS"}
+#'   (Event-Free Survival).}
+#'   \item{eventtime}{Numeric vector representing the time to event or censoring
+#'   for each patient.}
+#'   \item{event}{Integer vector where \code{1} indicates the occurrence of the
+#'   event and \code{0} indicates censoring.}
+#' }
+#' @source {Khader to add the reference!}
+"IPD_data"
+
+#' Fitted Survival Models
+#'
+#' This list contains the results of fitting Gompertz survival models to four
+#' different curves: \code{GD2.EFS}, \code{TT.EFS}, \code{GD2.OS}, and
+#' \code{TT.OS}. Each element in the list contains detailed information about
+#' the fitted model, including the call, parameters, data used, and results.
+"parametric_models"
+
 #' Jordan Life Table 2019
 #'
 #' This dataset provides mortality rates for different age groups, split by sex. The data includes mortality rates for both sexes combined, as well as separately for males and females.
