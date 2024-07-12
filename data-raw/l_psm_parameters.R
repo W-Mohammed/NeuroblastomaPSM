@@ -1,7 +1,14 @@
 ## code to prepare `l_psm_parameters` dataset goes here
 
+df_life_table <- NeuroblastomaPSM::df_lifeTable_Jordan[, 1:2]
+colnames(df_life_table) <- c("age", "probs")
+
 l_psm_parameters <- list(
+  age = 4,
   body_weight = 15,
+  smr_EFS = 5.6,
+  smr_PPS = 10.64,
+  cure_threshold = 10,
   GD2_unit_mg = 20,
   GD2_dose_days = 5,
   GD2_unit_price = 8790.26,
@@ -59,7 +66,8 @@ l_psm_parameters <- list(
   Iri_dose_days = 5,
   Iri_unit_price =  4.4,
   u_EFS = 0.84,
-  u_PPS = 0.56
+  u_PPS = 0.56,
+  df_life_table = df_life_table
 )
 
 usethis::use_data(l_psm_parameters, overwrite = TRUE)

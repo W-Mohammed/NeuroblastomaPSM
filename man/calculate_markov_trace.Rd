@@ -4,12 +4,21 @@
 \alias{calculate_markov_trace}
 \title{Calculate Markov Trace}
 \usage{
-calculate_markov_trace(df_survival_curves_long)
+calculate_markov_trace(df_survival_curves_long, l_params)
 }
 \arguments{
 \item{df_survival_curves_long}{A data frame containing the predicted
 cumulative survival curves in long format with columns for time, treatment,
 end_point, and survival probabilities.}
+
+\item{l_params}{A list of model parameters including the list of parameters
+in the list \code{\link{l_psm_parameters}} in addition to:
+\itemize{
+  \item \code{time_horizon}: The time horizon for the model in years.
+  \item \code{cycle_length}: The length of a model cycle measured in years.
+  \item \code{disc_rate_costs}: The annual discount rate for incurred costs.
+  \item \code{disc_rate_qalys}: The annual discount rate for accrued QALYs.
+}}
 }
 \value{
 A data frame in wide format with columns for time, treatment, and
@@ -41,12 +50,39 @@ df_survival_curves_long <- NeuroblastomaPSM::predict_cumulative_survival(
 
 # Generate Markov trace
 df_markov_trace <- NeuroblastomaPSM::calculate_markov_trace(
-  df_survival_curves_long = df_survival_curves_long
+  df_survival_curves_long = df_survival_curves_long,
+  l_params = params
 )
 
 rbind(
   head(df_markov_trace, n = 5),
   tail(df_markov_trace, n = 5)
+)
+
+# Define model parameters - longer time horizons triggers cure_threshold
+params2 <- c(
+  time_horizon = 15,
+  cycle_length = 1/12,
+  disc_rate_costs = 0.035,
+  disc_rate_qalys = 0.015,
+  NeuroblastomaPSM::l_psm_parameters
+)
+
+# Predict cumulative survival
+df_survival_curves_long2 <- NeuroblastomaPSM::predict_cumulative_survival(
+  models_fit = models_fit,
+  l_params = params2
+)
+
+# Generate Markov trace
+df_markov_trace2 <- NeuroblastomaPSM::calculate_markov_trace(
+  df_survival_curves_long = df_survival_curves_long2,
+  l_params = params2
+)
+
+rbind(
+  head(df_markov_trace2, n = 5),
+  tail(df_markov_trace2, n = 5)
 )
 }
 }

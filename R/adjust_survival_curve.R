@@ -133,9 +133,10 @@ adjust_survival_curve <- function(
     adjustment_time = 1) {
 
   # Check both curves are made up of equal number of points
-  stopifnot(
-    identical(length(baseline_survival), length(treatment_survival))
-  )
+  # Ensure survival_curve is a vector
+  if (!identical(length(baseline_survival), length(treatment_survival))) {
+    stop("Inputs baseline_survival and treatment_survival should be equal.")
+  }
 
   # Calculate instantaneous hazards for both curves
   baseline_hazard  <- convert_survival_to_hazard(baseline_survival)
@@ -172,7 +173,7 @@ adjust_survival_curve <- function(
   return(adjusted_survival_curve)
 }
 
-#' Convert Survival Curve to Cumulative Hazard Rates
+#' Convert Survival Curve to Instantaneous Hazard Rates
 #'
 #' This function converts a numeric vector of survival probabilities into
 #' instantaneous hazard rates. The relationship between survival probabilities
@@ -192,11 +193,11 @@ adjust_survival_curve <- function(
 #' \dontrun{
 #' survival_curve <- c(0.99, 0.95, 0.90, 0.85)
 #'
-#' cum_hazard_rates <- NeuroblastomaPSM::convert_survival_to_hazard(
+#' v_hazard_rates <- NeuroblastomaPSM::convert_survival_to_hazard(
 #' survival_curve = survival_curve
 #' )
 #'
-#' cum_hazard_rates
+#' v_hazard_rates
 #' }
 convert_survival_to_hazard <- function(survival_curve) {
 
@@ -324,17 +325,20 @@ convert_hazard_to_probability <- function(v_hazard_rate, time_unit = 1) {
 #' @examples
 #' \dontrun{
 #' # Define age range and survival probabilities
+#' model_starting_age <- NeuroblastomaPSM::l_psm_parameters$age
 #' df_lifeTable <- NeuroblastomaPSM::df_lifeTable_Jordan
+#' age <- df_lifeTable$`Age Group`
 #' mortality_probs <- df_lifeTable$`Both sexes`
+#' mortality_probs <- mortality_probs[age >= model_starting_age]
+#' age <- age[age >= model_starting_age]
 #'
-#' # Calculate the survival curve
+#' # Calculate the survival curve for the modeled cohort
 #' survival_curve <- NeuroblastomaPSM::get_lifeTable_survival_curve(
 #'    mortality_probs = mortality_probs
 #' )
-#' age <- df_lifeTable$`Age Group`
 #'
 #' # Define output ages
-#' target_ages <- seq(9, 29, 7/365)
+#' target_ages <- seq(model_starting_age, 29, 7/365)
 #'
 #' # Interpolate Survival Curve
 #' v_interpolated_curve <- NeuroblastomaPSM::interpolate_survival_curve(
@@ -368,7 +372,7 @@ convert_hazard_to_probability <- function(v_hazard_rate, time_unit = 1) {
 #'   survival_curve_ages = age,
 #'   survival_curve = survival_curve,
 #'   target_ages = target_ages2,
-#'   smr_multiplier = 5.6
+#'   smr_multiplier = NeuroblastomaPSM::l_psm_parameters$smr_EFS
 #' )
 #'
 #' v_interpolated_curve3
@@ -376,7 +380,7 @@ convert_hazard_to_probability <- function(v_hazard_rate, time_unit = 1) {
 #' # Compare fitted and observed survival curves
 #' plot(x = age, y = survival_curve, xlab = "Age", ylab = "Survival")
 #' lines(x = target_ages2, y = v_interpolated_curve2, col = "blue")
-#' lines(x = target_ages2, y = v_interpolated_curve3, col = "yellow")
+#' lines(x = target_ages2, y = v_interpolated_curve3, col = "orange")
 #'
 #' # Interpolate Survival Curve with a SMR = 5.6 * 1.9
 #' set.seed(1)
@@ -384,15 +388,15 @@ convert_hazard_to_probability <- function(v_hazard_rate, time_unit = 1) {
 #'   survival_curve_ages = age,
 #'   survival_curve = survival_curve,
 #'   target_ages = target_ages2,
-#'   smr_multiplier = 5.6 * 1.9
+#'   smr_multiplier = NeuroblastomaPSM::l_psm_parameters$smr_PPS
 #' )
 #'
-#' v_interpolated_curve3
+#' v_interpolated_curve4
 #'
 #' # Compare fitted and observed survival curves
 #' plot(x = age, y = survival_curve, xlab = "Age", ylab = "Survival")
 #' lines(x = target_ages2, y = v_interpolated_curve2, col = "blue")
-#' lines(x = target_ages2, y = v_interpolated_curve3, col = "yellow")
+#' lines(x = target_ages2, y = v_interpolated_curve3, col = "orange")
 #' lines(x = target_ages2, y = v_interpolated_curve4, col = "red")
 #' }
 interpolate_survival_curve <- function(
@@ -431,57 +435,6 @@ interpolate_survival_curve <- function(
   v_survival_curve <- exp(-v_fitted_cum_hazard_rate)
 
   return(v_survival_curve)
-}
-
-#' Scale Hazard Rate by Time Unit
-#'
-#' This function calculates the probability of an event occurring within a
-#' specified time period using the predicted hazard rate and the relative time
-#' unit at which the hazard rate is predicted.
-#'
-#' The relationship between the hazard rate (\eqn{h}) and the probability
-#' (\eqn{P}) of an event occurring over a time period (\eqn{t}) is given by:
-#'
-#' \deqn{P(t) = 1 - (1 - h)^t}
-#'
-#' where:
-#' \itemize{
-#'   \item \eqn{h} is the constant hazard rate.
-#'   \item \eqn{t} is the time period.
-#' }
-#'
-#' The formula derives from the discrete-time approximation of survival analysis:
-#' \itemize{
-#'   \item The probability of surviving through a single time unit given a
-#'   constant hazard rate \eqn{h} is \eqn{1 - h}.
-#'   \item The probability of surviving through \eqn{t} time units is
-#'   \eqn{(1 - h)^t}.
-#'   \item The probability of the event occurring within \eqn{t} time units is
-#'   the complement of the survival probability: \eqn{P(t) = 1 - (1 - h)^t}.
-#' }
-#'
-#' @param hazard_rate The predicted hazard rate.
-#' @param relative_time_unit The relative time at which the hazard rate is
-#' predicted.
-#'
-#' @return The probability of an event occurring within the specified time
-#' period.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' scaled_probability <- NeuroblastomaPSM::scale_hazard_by_timeUnit(
-#'   v_hazard_rate = c(0.05, 0.055),
-#'   relative_time_unit = 7/365
-#' )
-#'
-#' scaled_probability
-#' }
-scale_hazard_by_timeUnit <- function(v_hazard_rate, relative_time_unit) {
-
-  v_scaled_probs <- 1 - (1 - v_hazard_rate) ^ relative_time_unit
-
-  return(v_scaled_probs)
 }
 
 #' Calculate Survival Curve from Mortality Probabilities
@@ -525,28 +478,40 @@ get_lifeTable_survival_curve <- function(mortality_probs) {
   return(v_survival_curve)
 }
 
-#' Check if all values of a vector are equal to the first value with a given
-#' tolerance
+#' Estimate Mortality Probabilities from a Survival Curve
 #'
-#' This function checks if all values of a numeric vector are equal to the first
-#' value with a given tolerance.
+#' This function estimates the mortality probabilities from a given cumulative
+#' survival curve. The survival curve represents the probability of beyond each
+#' time point or age.
 #'
-#' @param x A numeric vector to check.
-#' @param tolerance The tolerance to use when checking for equality.
+#' @param survival_curve A numeric vector representing the survival curve
+#' corresponding to each age.
 #'
-#' @return TRUE if all values of x are equal to the first value with the given
-#' tolerance, FALSE otherwise.
+#' @return A numeric vector of estimated mortality probabilities corresponding
+#' to each age.
+#' @export
 #'
 #' @examples
 #' \dontrun{
+#' mortality_probs <- c(0.01, 0.02, 0.03, 0.04)
 #'
-#' check_all_equal_tol(c(3, 3, 3, 3, 3), 0.00001)
-#' # returns TRUE
+#' survival_curve <- get_lifeTable_survival_curve(mortality_probs)
 #'
-#' check_all_equal_tol(c(3, 3, 3, 3, 3.0001), 0.00001)
-#' # returns FALSE
+#' estimated_mortality_probs <- get_lifeTable_mortality_probs(survival_curve)
 #'
+#' estimated_mortality_probs
 #' }
-check_all_equal_tol <- function(x, tolerance) {
-  all(abs(x - x[1]) <= tolerance)
+get_lifeTable_mortality_probs <- function(survival_curve) {
+  # Ensure survival_curve is a vector
+  if (!is.vector(survival_curve)) {
+    stop("Input survival_curve should be a vector.")
+  }
+
+  # Calculate the mortality probabilities
+  v_mortality_probs <- c(
+    1 - survival_curve[1],
+    1 - survival_curve[-1] / survival_curve[-length(survival_curve)]
+  )
+
+  return(v_mortality_probs)
 }

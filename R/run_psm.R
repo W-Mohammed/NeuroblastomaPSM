@@ -26,7 +26,7 @@
 #'
 #' # Define model parameters
 #' params <- c(
-#'   time_horizon = 10,
+#'   time_horizon = 15,
 #'   cycle_length = 1/12,
 #'   disc_rate_costs = 0.035,
 #'   disc_rate_qalys = 0.015,
@@ -59,7 +59,8 @@ run_psm <- function(
 
   # Generate Markov trace
   df_markov_trace <- NeuroblastomaPSM::calculate_markov_trace(
-    df_survival_curves_long = df_survival_curves_long
+    df_survival_curves_long = df_survival_curves_long,
+    l_params = l_params
   )
 
   # Perform Economic Analysis

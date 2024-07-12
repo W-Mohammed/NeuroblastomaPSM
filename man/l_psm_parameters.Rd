@@ -7,7 +7,15 @@
 \format{
 A list with the following components:
 \describe{
+  \item{age}{Starting age of simulated cohort, 4.}
   \item{body_weight}{Body weight in kilograms, 15.}
+  \item{smr_EFS}{Standardized Mortality Ratio (SMR) for the Event Free
+  Survival compared to the general population all-cause mortality, 5.6.}
+  \item{smr_PPS}{Standardized Mortality Ratio (SMR) for the Post Progression
+  Survival compared to the general population all-cause mortality, 10.64.}
+  \item{cure_threshold}{The time in years at which those in the EFS are
+  considered cured, 10. Beyond this time, the mortality hazard rates for the
+  EFS and PPS is set by the `smr_EFS` and `smr_PPS` parameters, respectively.}
   \item{GD2_unit_mg}{Unit dose of Dinutuximab β (GD2) in milligrams, 20.}
   \item{GD2_dose_days}{Number of days on Dinutuximab β per cycle, 5.}
   \item{GD2_unit_price}{Unit price of Dinutuximab β, 8790.26.}
@@ -68,6 +76,12 @@ A list with the following components:
   \item{Iri_unit_price}{Unit price of Irinotecan, 4.4.}
   \item{u_EFS}{Utility value for Event-Free Survival (EFS), 0.84.}
   \item{u_PPS}{Utility value for Post-Progression Survival (PPS), 0.56.}
+  \item{df_life_table}{dataframe representing the Life Table for Jordan:
+    \describe{
+      \item{age}{Numeric vector representing the age groups from 0 to 100.}
+      \item{prob}{Numeric vector representing the mortality rates.}
+    }
+  }
 }
 }
 \usage{
