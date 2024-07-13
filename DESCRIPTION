@@ -25,7 +25,6 @@ LazyData: true
 URL: https://github.com/W-Mohammed/NeuroblastomaPSM, https://w-mohammed.github.io/NeuroblastomaPSM/
 BugReports: https://github.com/W-Mohammed/NeuroblastomaPSM/issues
 Suggests: 
-    data.table,
     knitr,
     rmarkdown,
     survHE,
@@ -36,6 +35,7 @@ Depends:
     R (>= 2.10)
 RoxygenNote: 7.3.1
 Imports: 
+    data.table,
     ggplot2,
     ggtext,
     mgcv,
