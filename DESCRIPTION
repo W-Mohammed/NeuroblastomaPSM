@@ -27,7 +27,8 @@ BugReports: https://github.com/W-Mohammed/NeuroblastomaPSM/issues
 Suggests: 
     data.table,
     knitr,
-    rmarkdown
+    rmarkdown,
+    survminer
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
@@ -40,5 +41,4 @@ Imports:
     stats,
     survHE,
     survival,
-    survminer,
     truncnorm
