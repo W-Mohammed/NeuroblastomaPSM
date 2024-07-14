@@ -46,7 +46,7 @@
 #'
 #' # Define model parameters - longer time horizons triggers cure_threshold
 #' params2 <- c(
-#'   time_horizon = 15,
+#'   time_horizon = 25,
 #'   cycle_length = 1/12,
 #'   disc_rate_costs = 0.035,
 #'   disc_rate_qalys = 0.015,
@@ -89,8 +89,6 @@ calculate_markov_trace <- function(
   )
 
   # Calculating 'PPS' and 'D' state occupancy:
-  # df_survival_curves$PPS[1:10 * cycle_length] <- df_survival_curves$OS[1:10 * cycle_length] - df_survival_curves$EFS[1:10 * cycle_length]
-  # cumprod(df_survival_curves$PPS[length(df_survival_curves$PPS)], adjusted_PPS_cuve)
   df_survival_curves$PPS <- df_survival_curves$OS - df_survival_curves$EFS
   df_survival_curves$D <- 1 - df_survival_curves$OS
 
@@ -119,7 +117,7 @@ calculate_markov_trace <- function(
       v_life_table_ages >= curve_starting_age
     ]
 
-    # Calculate the survival curve for a healthy general population same age cohort
+    # Calculate the survival curve for a same age healthy general population
     v_lifeTable_survival_curve <- NeuroblastomaPSM::get_lifeTable_survival_curve(
       mortality_probs = v_life_table_porbs
     )

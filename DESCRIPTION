@@ -28,17 +28,18 @@ Suggests:
     data.table,
     knitr,
     rmarkdown,
+    survHE,
     survminer
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
 RoxygenNote: 7.3.1
 Imports: 
+    flexsurv,
     ggplot2,
     ggtext,
     mgcv,
     scales,
     stats,
-    survHE,
     survival,
     truncnorm
