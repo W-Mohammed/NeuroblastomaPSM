@@ -166,7 +166,7 @@ calculate_markov_trace <- function(
   # Sanity check:
   stopifnot(
     "Markov trace does not sum up to 1." =
-      all(rowSums(df_markov_trace[, c("EFS", "PPS", "D")])  == 1.0000)
+      all(abs(rowSums(df_markov_trace[, c("EFS", "PPS", "D")]) - 1) < 1e-12)
   )
 
   return(df_markov_trace)

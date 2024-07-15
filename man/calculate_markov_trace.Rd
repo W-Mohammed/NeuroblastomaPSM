@@ -61,7 +61,7 @@ rbind(
 
 # Define model parameters - longer time horizons triggers cure_threshold
 params2 <- c(
-  time_horizon = 15,
+  time_horizon = 25,
   cycle_length = 1/12,
   disc_rate_costs = 0.035,
   disc_rate_qalys = 0.015,
