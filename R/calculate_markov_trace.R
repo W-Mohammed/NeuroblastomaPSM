@@ -137,21 +137,21 @@ calculate_markov_trace <- function(
     )
     # Apply the cure threshold assumptions
     df_GD2 <- df_survival_curves[df_survival_curves$treatment == "GD2", ]
-    df_GD2$EFS[cure_starting_cycle:nrow(df_GD2)] <- cumprod(
-      c(df_GD2$EFS[cure_starting_cycle], v_cure_EFS_curve)
-    )
-    df_GD2$PPS[cure_starting_cycle:nrow(df_GD2)] <- cumprod(
-      c(df_GD2$PPS[cure_starting_cycle], v_cure_PPS_curve)
-    )
+    df_GD2$EFS[cure_starting_cycle:nrow(df_GD2)] <-
+      c(df_GD2$EFS[cure_starting_cycle],df_GD2$EFS[cure_starting_cycle] * v_cure_EFS_curve)
+
+    df_GD2$PPS[cure_starting_cycle:nrow(df_GD2)] <-
+      c(df_GD2$PPS[cure_starting_cycle],df_GD2$PPS[cure_starting_cycle] * v_cure_PPS_curve)
+
     df_GD2$D <- 1 - (df_GD2$EFS + df_GD2$PPS)
 
     df_TT  <- df_survival_curves[df_survival_curves$treatment == "TT", ]
-    df_TT$EFS[cure_starting_cycle:nrow(df_TT)] <- cumprod(
-      c(df_TT$EFS[cure_starting_cycle], v_cure_EFS_curve)
-    )
-    df_TT$PPS[cure_starting_cycle:nrow(df_TT)] <- cumprod(
-      c(df_TT$PPS[cure_starting_cycle], v_cure_PPS_curve)
-    )
+    df_TT$EFS[cure_starting_cycle:nrow(df_TT)] <-
+      c(df_TT$EFS[cure_starting_cycle],df_TT$EFS[cure_starting_cycle] * v_cure_EFS_curve)
+
+    df_TT$PPS[cure_starting_cycle:nrow(df_TT)] <-
+      c(df_TT$PPS[cure_starting_cycle],df_TT$PPS[cure_starting_cycle] * v_cure_PPS_curve)
+
     df_TT$D <- 1 - (df_TT$EFS + df_TT$PPS)
 
     df_survival_curves <- rbind(df_GD2, df_TT)
