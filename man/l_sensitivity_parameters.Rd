@@ -34,6 +34,42 @@ A list with the following components:
       \item{distribution}{Distribution type, here "gamma".}
     }
   }
+  \item{prob_anemia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean probability of anemia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "beta".}
+    }
+  }
+  \item{prob_leukopenia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean probability of leukopenia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "beta".}
+    }
+  }
+  \item{prob_neutropenia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean probability of neutropenia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "beta".}
+    }
+  }
+  \item{prob_thrombocytopenia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean probability of thrombocytopenia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "beta".}
+    }
+  }
   \item{prob_fever}{A list with the following elements:
     \describe{
       \item{mean}{Mean probability of fever.}
@@ -43,9 +79,36 @@ A list with the following components:
       \item{distribution}{Distribution type, here "beta".}
     }
   }
+  \item{prob_urticaria}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean probability of urticaria.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "beta".}
+    }
+  }
+  \item{prob_immunotherapy_related_pain}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean probability of immunotherapy related pain.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "beta".}
+    }
+  }
   \item{prob_diarrhea}{A list with the following elements:
     \describe{
       \item{mean}{Mean probability of diarrhea.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "beta".}
+    }
+  }
+  \item{prob_hypotension}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean probability of hypotension.}
       \item{se}{Standard error of the mean.}
       \item{lower_ci}{Lower bound of the 95\% confidence interval.}
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}
@@ -88,6 +151,42 @@ A list with the following components:
       \item{distribution}{Distribution type, here "beta".}
     }
   }
+  \item{cost_anemia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean cost of anemia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "gamma".}
+    }
+  }
+  \item{cost_leukopenia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean cost of leukopenia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "gamma".}
+    }
+  }
+  \item{cost_neutropenia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean cost of neutropenia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "gamma".}
+    }
+  }
+  \item{cost_thrombocytopenia}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean cost of thrombocytopenia.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "gamma".}
+    }
+  }
   \item{cost_fever}{A list with the following elements:
     \describe{
       \item{mean}{Mean cost of fever.}
@@ -97,9 +196,36 @@ A list with the following components:
       \item{distribution}{Distribution type, here "gamma".}
     }
   }
+  \item{cost_urticaria}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean cost of urticaria.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "gamma".}
+    }
+  }
+  \item{cost_immunotherapy_related_pain}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean cost of immunotherapy related pain.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "gamma".}
+    }
+  }
   \item{cost_diarrhea}{A list with the following elements:
     \describe{
       \item{mean}{Mean cost of diarrhea.}
+      \item{se}{Standard error of the mean.}
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+      \item{distribution}{Distribution type, here "gamma".}
+    }
+  }
+  \item{cost_hypotension}{A list with the following elements:
+    \describe{
+      \item{mean}{Mean cost of hypotension.}
       \item{se}{Standard error of the mean.}
       \item{lower_ci}{Lower bound of the 95\% confidence interval.}
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}

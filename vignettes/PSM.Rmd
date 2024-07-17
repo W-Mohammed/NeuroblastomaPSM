@@ -120,59 +120,6 @@ rbind(
 )
 ```
 
-```{r cumulative_survival_func, echo=TRUE, eval=FALSE}
-# Creating a function from the cumulative survival code chunk above
-predict_cumulative_survival <- function(models_fit, params) {
-  time_points <- seq(
-    from = 0,
-    to = params$time_horizon, 
-    by = 1 / params$cycles_per_year
-  )
-  
-  df_survival_curves_long <- lapply(
-    X = names(models_fit) |> 
-      `names<-`(names(models_fit)), 
-    FUN = function(curve_nm) {
-      model_fit <- models_fit[[curve_nm]]
-      end_point <- ifelse(
-        test = grepl(pattern = "OS", x = curve_nm), 
-        yes = "OS", 
-        no = "EFS"
-      )
-      treatment_nm <- gsub(
-        pattern = paste0(".", end_point), 
-        replacement = "", 
-        x = curve_nm
-      )
-      
-      NeuroblastomaPSM::predict_survival_curve(
-        surv_mod = model_fit, 
-        treatment_name = treatment_nm, 
-        end_point = end_point, 
-        time_points = time_points
-      )
-    }) |> 
-    do.call(
-      what = rbind, 
-      args = _
-    ) |> 
-    `rownames<-`(NULL)
-  
-  return(df_survival_curves_long)
-}
-```
-
-```{r compare_cumulative_survival_results, echo=TRUE, eval=FALSE}
-# Estimate cumulative survival via the function:
-set.seed(1)
-df_survival_curves_long2 <- NeuroblastomaPSM::predict_cumulative_survival(
-   models_fit = models_fit,
-   params = params
-)
-# Compare lose code and function generated results:
-identical(df_survival_curves_long, df_survival_curves_long2)
-```
-
 ### State membership (Markov trace):
 
 This model is represented by three health states, *event free survival (EFS)*,  *post progression survival (PPS)* and *death*. Using the predicted *EFS* and *OS*, state membership is estimated below.
@@ -242,51 +189,6 @@ df_markov_trace |>
   ggplot2::facet_wrap(~treatment)
 ```
 
-```{r markov_trace_func, echo=TRUE, eval=FALSE}
-# Creating a function from the code estimating the Markov trace:
-calculate_markov_trace <- function(df_survival_curves_long) {
-  df_survival_curves <- stats::reshape(
-    data = df_survival_curves_long, 
-    timevar = "end_point", 
-    idvar = c("time", "treatment"), 
-    direction = "wide"
-  )
-  
-  # Renaming the columns since reshape() adds a prefix to the column name:
-  names(df_survival_curves) <- gsub(
-    pattern = "survival\\.",
-    replacement = "", 
-    x = names(df_survival_curves)
-  )
-  
-  # Calculating 'PPS' and 'D' state occupancy:
-  df_survival_curves$PPS <- df_survival_curves$OS - df_survival_curves$EFS
-  df_survival_curves$D <- 1 - df_survival_curves$OS
-  
-  # Extract relevant columns:
-  df_markov_trace <- df_survival_curves[
-    , 
-    c("time", "treatment", "EFS", "PPS", "D")
-  ]
-
-  stopifnot(
-    "Markov trace does not sum up to 1." = 
-      all(rowSums(df_markov_trace[, c("EFS", "PPS", "D")]) == 1))
-  
-  return(df_markov_trace)
-}
-```
-
-```{r compare_markov_trace_results, echo=TRUE, eval=FALSE}
-# Estimate markov trace via the function:
-set.seed(1)
-df_markov_trace2 <- NeuroblastomaPSM::calculate_markov_trace(
-   df_survival_curves_long = df_survival_curves_long
-)
-# Compare lose code and function generated results:
-identical(df_markov_trace, df_markov_trace2)
-```
-
 ### Economic Analysis:
 
 ```{r economic_analysis}
@@ -351,66 +253,4 @@ inc_qaly  <- m_disc_res[, "q_Dinutuximab_β"] - m_disc_res[, "q_Isotretinoin"]
 # calculate the ICER
 as.numeric(inc_cost / inc_qaly)
 ```
-
-```{r economic_analysis_func, echo=TRUE, eval=FALSE}
-perform_economic_analysis <- function(df_markov_trace, params) {
-  # Create treatment specific Markov trace matrices (for matrix multiplication)
-  m_TR_Isotretinoin <- as.matrix(
-    x = df_markov_trace[
-      df_markov_trace$treatment == "Isotretinoin", c("EFS", "PPS", "D")]
-  )
-  m_TR_Dinutuximab_β <- as.matrix(
-    x = df_markov_trace[
-      df_markov_trace$treatment == "Dinutuximab β", c("EFS", "PPS", "D")]
-  )
-  
-  # Create vectors of health states payoffs
-  v_C_Isotretinoin  <- c("EFS" = params$c_TT,  "PPS" = params$c_PPS, "D" = 0)
-  v_C_Dinutuximab_β <- c("EFS" = params$c_GD2, "PPS" = params$c_PPS, "D" = 0)
-  v_Util            <- c("EFS" = params$u_EFS, "PPS" = params$u_PPS, "D" = 0)
-  
-  # Matrix multiplication of trace by:
-  ## cost per cycle - gives total cost by cycle
-  v_costs_Isotretinoin  <- m_TR_Isotretinoin %*% 
-    (v_C_Isotretinoin / params$cycles_per_year)
-  v_costs_Dinutuximab_β <- m_TR_Dinutuximab_β %*% 
-    (v_C_Dinutuximab_β / params$cycles_per_year)
-  ## utility by cycle - gives total utility by cycle  
-  v_qalys_Isotretinoin  <- m_TR_Isotretinoin %*% 
-    (v_Util / params$cycles_per_year)
-  v_qalys_Dinutuximab_β <- m_TR_Dinutuximab_β %*% 
-    (v_Util / params$cycles_per_year)
-
-  # Get model cycles time points
-  time_points <- seq(
-    from = 0,
-    to = params$time_horizon,
-    by = 1 / params$cycles_per_year
-  )
-  
-  # Calculate costs and QALYs discount weights
-  v_dw_c <- 1 / (1 + params$disc_rate_costs) ^ time_points
-  v_dw_e <- 1 / (1 + params$disc_rate_qalys) ^ time_points
-
-  # Prepare un-discounted results 
-  m_costs_results <- cbind(v_costs_Isotretinoin, v_costs_Dinutuximab_β) |> 
-    `colnames<-`(c("c_Isotretinoin", "c_Dinutuximab_β"))
-  m_qalys_results <- cbind(v_qalys_Isotretinoin, v_qalys_Dinutuximab_β) |> 
-    `colnames<-`(c("q_Isotretinoin", "q_Dinutuximab_β"))
-  
-  # Prepare discounted results 
-  v_Dcosts_results <- v_dw_c %*% m_costs_results |> 
-    `colnames<-`(c("Isotretinoin", "Dinutuximab_β"))
-  v_Dqalys_results <- v_dw_e %*% m_qalys_results |> 
-    `colnames<-`(c("Isotretinoin", "Dinutuximab_β"))
-  
-  return(
-    list(
-      v_Dcosts_results = v_Dcosts_results,
-      v_Dqalys_results = v_Dqalys_results
-    )
-  )
-}
-```
-
 

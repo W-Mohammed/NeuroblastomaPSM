@@ -25,13 +25,55 @@ A list with the following components:
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}
     }
   }
+  \item{prob_anemia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{prob_leukopenia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{prob_neutropenia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{prob_thrombocytopenia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
   \item{prob_fever}{A list with the following elements:
     \describe{
       \item{lower_ci}{Lower bound of the 95\% confidence interval.}
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}
     }
   }
+  \item{prob_urticaria}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{prob_immunotherapy_related_pain}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
   \item{prob_diarrhea}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{prob_hypotension}{A list with the following elements:
     \describe{
       \item{lower_ci}{Lower bound of the 95\% confidence interval.}
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}
@@ -61,13 +103,55 @@ A list with the following components:
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}
     }
   }
+  \item{cost_anemia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{cost_leukopenia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{cost_neutropenia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{cost_thrombocytopenia}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
   \item{cost_fever}{A list with the following elements:
     \describe{
       \item{lower_ci}{Lower bound of the 95\% confidence interval.}
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}
     }
   }
+  \item{cost_urticaria}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{cost_immunotherapy_related_pain}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
   \item{cost_diarrhea}{A list with the following elements:
+    \describe{
+      \item{lower_ci}{Lower bound of the 95\% confidence interval.}
+      \item{upper_ci}{Upper bound of the 95\% confidence interval.}
+    }
+  }
+  \item{cost_hypotension}{A list with the following elements:
     \describe{
       \item{lower_ci}{Lower bound of the 95\% confidence interval.}
       \item{upper_ci}{Upper bound of the 95\% confidence interval.}
