@@ -230,7 +230,7 @@ lines(x = target_ages, y = v_interpolated_EFS_curve, col = "orange")
 lines(x = target_ages, y = v_interpolated_PPS_curve, col = "red")
 legend(
   "bottomleft", 
-  legend = c("Observed survival curve", "Interpolated survival curve", "EFS curve", "PFS curve"),
+  legend = c("Observed survival curve", "Interpolated survival curve", "EFS curve", "PPS curve"),
   col = c("black", "blue", "orange", "red"),
   lty = 1,
   bty = "n"
