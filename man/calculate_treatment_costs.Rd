@@ -7,7 +7,7 @@
 calculate_treatment_costs(
   l_params,
   GD2_cycle_days = 35,
-  TT_cycle_days = 28,
+  TT_cycle_days = 30,
   Temo_cycle_days = 21,
   Iri_cycle_days = 21
 )
@@ -26,7 +26,7 @@ in the list \code{\link{l_psm_parameters}} in addition to:
 value is `35` days.}
 
 \item{TT_cycle_days}{The number of days in a TT treatment cycle. Default
-value is `28` days.}
+value is `30` days.}
 
 \item{Temo_cycle_days}{The number of days in a Temozolomide treatment cycle.
 Default value is `21` days.}

@@ -35,7 +35,8 @@
 #'
 #' # Generate Markov trace
 #' df_markov_trace <- NeuroblastomaPSM::calculate_markov_trace(
-#'   df_survival_curves_long = df_survival_curves_long
+#'   df_survival_curves_long = df_survival_curves_long,
+#'   l_params = params
 #' )
 #'
 #' # Perform Economic Analysis

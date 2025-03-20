@@ -7,36 +7,64 @@
 \format{
 A list with the following components:
 \describe{
+  \item{age}{Starting age of simulated cohort, 4.}
   \item{body_weight}{Body weight in kilograms, 15.}
+  \item{smr_EFS}{Standardized Mortality Ratio (SMR) for the Event Free
+  Survival compared to the general population all-cause mortality, 5.6.}
+  \item{smr_PPS}{Standardized Mortality Ratio (SMR) for the Post Progression
+  Survival compared to the general population all-cause mortality, 10.64.}
+  \item{cure_threshold}{The time in years at which those in the EFS are
+  considered cured, 10. Beyond this time, the mortality hazard rates for the
+  EFS and PPS is set by the `smr_EFS` and `smr_PPS` parameters, respectively.}
   \item{GD2_unit_mg}{Unit dose of Dinutuximab β (GD2) in milligrams, 20.}
   \item{GD2_dose_days}{Number of days on Dinutuximab β per cycle, 5.}
   \item{GD2_unit_price}{Unit price of Dinutuximab β, 8790.26.}
-  \item{TT_unit_mg}{Unit dose of Isotretinoin (TT) in milligrams, 10.}
+  \item{TT_unit_mg}{Unit dose of Isotretinoin (TT) in milligrams, 20.}
   \item{TT_dose_days}{Number of days for Isotretinoin dosing, 14.}
   \item{TT_unit_price}{Unit price of Isotretinoin, 0.24.}
   \item{GD2_aEvents_names}{Names of adverse events for GD2:
     \describe{
+      \item{anemia}{anemia}
+      \item{leukopenia}{leukopenia}
+      \item{neutropenia}{neutropenia}
+      \item{thrombocytopenia}{thrombocytopenia}
       \item{fever}{Fever}
+      \item{urticaria}{urticaria}
+      \item{immunotherapy_related_pain}{immunotherapy related pain}
       \item{diarrhea}{Diarrhea}
+      \item{hypotension}{hypotention}
       \item{vomiting}{Vomiting}
       \item{infection}{Infection}
       \item{hypersensitivity_reaction}{Hypersensitivity reaction}
       \item{capillary_leak}{Capillary leak}
     }
   }
-  \item{prob_fever}{Probability of fever, 0.18.}
-  \item{prob_diarrhea}{Probability of diarrhea, 0.07.}
-  \item{prob_vomiting}{Probability of vomiting, 0.06.}
-  \item{prob_infection}{Probability of infection, 0.21.}
-  \item{prob_hypersensitivity_reaction}{Probability of hypersensitivity
-  reaction, 0.11.}
-  \item{prob_capillary_leak}{Probability of capillary leak, 0.06.}
-  \item{cost_fever}{Cost of fever, 1.98.}
-  \item{cost_diarrhea}{Cost of diarrhea, 3.2.}
-  \item{cost_vomiting}{Cost of vomiting, 8.45.}
-  \item{cost_infection}{Cost of infection, 222.33.}
-  \item{cost_hypersensitivity_reaction}{Cost of hypersensitivity reaction, 4.13.}
-  \item{cost_capillary_leak}{Cost of capillary leak, 307.37.}
+  \item{prob_anemia}{Probability of anemia, 0.42}
+  \item{prob_leukopenia}{Probability of leukopenia, 0.45}
+  \item{prob_neutropenia}{Probability of neutropenia, 0.33}
+  \item{prob_thrombocytopenia}{Probability of thrombocytopenia, 0.35}
+  \item{prob_fever}{Probability of Fever, 0.14}
+  \item{prob_urticaria}{Probability of urticaria, 0.05}
+  \item{prob_immunotherapy_related_pain}{Probability of immunotherapy related pain, 0.16}
+  \item{prob_diarrhea}{Probability of Diarrhea, 0.07}
+  \item{prob_hypotension}{Probability of hypotention, 0.08}
+  \item{prob_vomiting}{Probability of Vomiting, 0.06}
+  \item{prob_infection}{Probability of Infection, 0.25}
+  \item{prob_hypersensitivity_reaction}{Probability of Hypersensitivity reaction, 0.08}
+  \item{prob_capillary_leak}{Probability of Capillary leak, 0.1}
+  \item{cost_anemia}{Cost of anemia, 0.}
+  \item{cost_leukopenia}{Cost of leukopenia, 0}
+  \item{cost_neutropenia}{Cost of neutropenia, 0}
+  \item{cost_thrombocytopenia}{Cost of thrombocytopenia, 0}
+  \item{cost_fever}{Cost of Fever, 1.98}
+  \item{cost_urticaria}{Cost of urticaria, 0}
+  \item{cost_immunotherapy_related_pain}{Cost of immunotherapy related pain, 0}
+  \item{cost_diarrhea}{Cost of Diarrhea, 3.2}
+  \item{cost_hypotension}{Cost of hypotention, 0}
+  \item{cost_vomiting}{Cost of Vomiting, 8.45}
+  \item{cost_infection}{Cost of Infection, 222.33}
+  \item{cost_hypersensitivity_reaction}{Cost of Hypersensitivity reaction, 4.13}
+  \item{cost_capillary_leak}{Cost of Capillary leak, 306.37}
   \item{cost_pain}{Cost of pain, 6.36.}
   \item{cost_laboratory}{Cost of laboratory services, 141.45.}
   \item{cost_hospitalisation}{Cost of hospitalisation, 3763.62.}
@@ -48,6 +76,12 @@ A list with the following components:
   \item{Iri_unit_price}{Unit price of Irinotecan, 4.4.}
   \item{u_EFS}{Utility value for Event-Free Survival (EFS), 0.84.}
   \item{u_PPS}{Utility value for Post-Progression Survival (PPS), 0.56.}
+  \item{df_life_table}{dataframe representing the Life Table for Jordan:
+    \describe{
+      \item{age}{Numeric vector representing the age groups from 0 to 100.}
+      \item{prob}{Numeric vector representing the mortality rates.}
+    }
+  }
 }
 }
 \usage{

@@ -1,3 +1,52 @@
+#' Reconstructed Individual Patient Data
+#'
+#' This dataset contains reconstructed individual patient data (IPD) from
+#' published KM survival curve. The dataset includes information on treatment
+#' type, treatment code, survival curve type, event times, and event occurrences
+#' for each patient.
+#'
+#' @format A data frame with 624 observations on the following 5 variables:
+#' \describe{
+#'   \item{trt}{Character vector indicating the treatment received by each
+#'   patient. Possible values are \code{"Isotretinoin"} and
+#'   \code{"Dinutuximab β"}.}
+#'   \item{trt_cd}{Character vector representing the treatment code.
+#'   \code{"TT"} for \code{Isotretinoin} and \code{"GD2"} for
+#'   \code{Dinutuximab β}.}
+#'   \item{curve}{Character vector indicating the type of survival curve.
+#'   Possible values are \code{"OS"} (Overall Survival) and \code{"EFS"}
+#'   (Event-Free Survival).}
+#'   \item{eventtime}{Numeric vector representing the time to event or censoring
+#'   for each patient.}
+#'   \item{event}{Integer vector where \code{1} indicates the occurrence of the
+#'   event and \code{0} indicates censoring.}
+#' }
+#' @source {Khader to add the reference!}
+"IPD_data"
+
+#' Fitted Survival Models
+#'
+#' This list contains the results of fitting Gompertz survival models to four
+#' different curves: \code{GD2.EFS}, \code{TT.EFS}, \code{GD2.OS}, and
+#' \code{TT.OS}. Each element in the list contains detailed information about
+#' the fitted model, including the call, parameters, data used, and results.
+"parametric_models"
+
+#' Jordan Life Table 2019
+#'
+#' This dataset provides mortality rates for different age groups, split by sex. The data includes mortality rates for both sexes combined, as well as separately for males and females.
+#'
+#' @format A data frame with 101 rows and 4 variables:
+#' \describe{
+#'   \item{Age Group}{Numeric vector representing the age groups from 0 to 100.}
+#'   \item{Both sexes}{Numeric vector representing the mortality rates for both
+#'   sexes combined.}
+#'   \item{Male}{Numeric vector representing the mortality rates for males.}
+#'   \item{Female}{Numeric vector representing the mortality rates for females.}
+#' }
+#' @source {Khader to add the reference!}
+"df_lifeTable_Jordan"
+
 #' Partitioned Survival Model (PSM) Parameters
 #'
 #' This list contains the Partitioned Survival Model (PSM) parameters including
@@ -5,7 +54,15 @@
 #'
 #' @format A list with the following components:
 #' \describe{
+#'   \item{age}{Starting age of simulated cohort, 4.}
 #'   \item{body_weight}{Body weight in kilograms, 15.}
+#'   \item{smr_EFS}{Standardized Mortality Ratio (SMR) for the Event Free
+#'   Survival compared to the general population all-cause mortality, 5.6.}
+#'   \item{smr_PPS}{Standardized Mortality Ratio (SMR) for the Post Progression
+#'   Survival compared to the general population all-cause mortality, 10.64.}
+#'   \item{cure_threshold}{The time in years at which those in the EFS are
+#'   considered cured, 10. Beyond this time, the mortality hazard rates for the
+#'   EFS and PPS is set by the `smr_EFS` and `smr_PPS` parameters, respectively.}
 #'   \item{GD2_unit_mg}{Unit dose of Dinutuximab β (GD2) in milligrams, 20.}
 #'   \item{GD2_dose_days}{Number of days on Dinutuximab β per cycle, 5.}
 #'   \item{GD2_unit_price}{Unit price of Dinutuximab β, 8790.26.}
@@ -66,6 +123,12 @@
 #'   \item{Iri_unit_price}{Unit price of Irinotecan, 4.4.}
 #'   \item{u_EFS}{Utility value for Event-Free Survival (EFS), 0.84.}
 #'   \item{u_PPS}{Utility value for Post-Progression Survival (PPS), 0.56.}
+#'   \item{df_life_table}{dataframe representing the Life Table for Jordan:
+#'     \describe{
+#'       \item{age}{Numeric vector representing the age groups from 0 to 100.}
+#'       \item{prob}{Numeric vector representing the mortality rates.}
+#'     }
+#'   }
 #' }
 "l_psm_parameters"
 
